@@ -3,7 +3,7 @@ import { ArrowRight, Star, Check, Clock } from 'lucide-react';
 import Photo from '@/components/ui/Photo';
 import Reveal from '@/components/ui/Reveal';
 import Container from '@/components/ui/Container';
-import { cta, conversion } from '@/data/site';
+import { cta, conversion, socialProof } from '@/data/site';
 
 export default function Hero() {
   return (
@@ -26,7 +26,7 @@ export default function Hero() {
         <div className="max-w-3xl">
           <Reveal>
             <span className="inline-flex items-center gap-2 rounded-full border border-cream-50/20 bg-cream-50/5 px-4 py-1.5 text-[11px] uppercase tracking-luxe text-gold-300 backdrop-blur-sm">
-              <Star className="h-3 w-3 fill-current" /> Rated 5.0 by 500+ clients
+              <Star className="h-3 w-3 fill-current" /> {socialProof.ratingLabel}
             </span>
           </Reveal>
           <Reveal delay={0.08}>

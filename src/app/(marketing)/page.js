@@ -15,6 +15,7 @@ import PortfolioGallery from '@/components/sections/PortfolioGallery';
 import CTASection from '@/components/sections/CTASection';
 import TrustBar from '@/components/sections/TrustBar';
 import Stars from '@/components/ui/Stars';
+import { socialProof } from '@/data/site';
 import { aboutStory } from '@/data/about';
 import { packagesNote } from '@/data/packages';
 
@@ -142,7 +143,7 @@ export default function HomePage() {
         <div className="mt-8 flex items-center justify-center gap-3">
           <Stars count={5} />
           <span className="text-sm text-ink-500">
-            <strong className="font-display text-lg text-ink-900">5.0</strong> · 500+ celebrations curated
+            <strong className="font-display text-lg text-ink-900">{socialProof.ratingValue}</strong> · {socialProof.ratingCaption}
           </span>
         </div>
         <div className="mt-10">

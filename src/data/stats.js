@@ -1,3 +1,4 @@
+// ── STATS BAND (home + about) — edit the four numbers/labels shown across the site. ──
 export const stats = [
   { value: '15+', label: 'Years of artistry' },
   { value: '500+', label: 'Events curated' },

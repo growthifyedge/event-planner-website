@@ -1,3 +1,5 @@
+// ── TESTIMONIALS — add/edit/remove client quotes here (shown on home + /testimonials). ──
+// Each: { quote, name, role, rating } (rating 1–5). The first entry is the large featured quote.
 export const testimonials = [
   {
     quote:
