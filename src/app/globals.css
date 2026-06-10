@@ -1,0 +1,159 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --gold: #c8a24a;
+  }
+
+  * {
+    @apply border-ink-200/40;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-cream-50 text-ink-900 font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+
+  ::selection {
+    background-color: rgba(200, 162, 74, 0.28);
+    color: #121013;
+  }
+
+  /* Refined custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f7f2e9;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d2a949;
+    border-radius: 9999px;
+    border: 2px solid #f7f2e9;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #c8a24a;
+  }
+}
+
+@layer components {
+  /* Page horizontal rhythm */
+  .container-luxe {
+    @apply mx-auto w-full max-w-8xl px-5 sm:px-6 lg:px-8 xl:px-10;
+  }
+
+  /* Eyebrow / kicker label above headings */
+  .eyebrow {
+    @apply inline-flex items-center gap-3 text-xs font-medium uppercase tracking-luxe text-gold-600;
+  }
+  .eyebrow::before {
+    content: '';
+    @apply h-px w-8 bg-gold-500;
+  }
+
+  /* Gold gradient text */
+  .text-gold-gradient {
+    @apply bg-gold-gradient bg-clip-text text-transparent;
+  }
+
+  /* Primary button */
+  .btn {
+    @apply relative overflow-hidden inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium uppercase tracking-widest transition-all duration-300 ease-luxe focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  /* Keep button content above the shine sweep */
+  .btn > * {
+    @apply relative z-[1];
+  }
+  /* Luxury shine sweep on hover */
+  .btn::after {
+    content: '';
+    @apply pointer-events-none absolute inset-0 z-0;
+    background: linear-gradient(120deg, transparent 35%, rgba(255, 255, 255, 0.4) 50%, transparent 65%);
+    transform: translateX(-160%);
+    transition: transform 0.7s var(--tw-ease, cubic-bezier(0.22, 1, 0.36, 1));
+  }
+  .btn:hover::after {
+    transform: translateX(160%);
+  }
+  .btn-gold {
+    @apply btn bg-gold-gradient text-ink-900 shadow-luxe-gold hover:-translate-y-0.5 hover:shadow-luxe;
+  }
+  .btn-ink {
+    @apply btn bg-ink-900 text-cream-50 hover:bg-ink-800 hover:-translate-y-0.5;
+  }
+  .btn-outline {
+    @apply btn border border-ink-900/20 bg-transparent text-ink-900 hover:border-gold-500 hover:text-gold-700;
+  }
+  .btn-outline-light {
+    @apply btn border border-cream-50/30 bg-transparent text-cream-50 hover:border-gold-400 hover:text-gold-300;
+  }
+
+  /* Glass / surface cards */
+  .card-luxe {
+    @apply rounded-2xl border border-ink-200/40 bg-white shadow-card transition-all duration-500 ease-luxe;
+  }
+
+  /* Thin gold divider */
+  .rule-gold {
+    @apply h-px w-16 bg-gold-gradient;
+  }
+
+  /* Form primitives */
+  .form-label {
+    @apply mb-2 block text-[11px] font-medium uppercase tracking-widest text-ink-500;
+  }
+  .form-input {
+    @apply w-full rounded-xl border border-ink-200 bg-white/80 px-4 py-3.5 text-ink-900 outline-none transition duration-300 placeholder:text-ink-300 focus:border-gold-500 focus:ring-4 focus:ring-gold-500/10;
+  }
+  .form-input-invalid {
+    @apply border-red-400 focus:border-red-500 focus:ring-red-500/10;
+  }
+  .form-error {
+    @apply mt-1.5 text-xs text-red-600;
+  }
+
+  /* Decorative shimmering hairline used on dark sections */
+  .hairline {
+    background: linear-gradient(90deg, transparent, rgba(200, 162, 74, 0.6), transparent);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  /* Subtle film grain / noise overlay for premium texture */
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+  .perspective {
+    perspective: 1200px;
+  }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

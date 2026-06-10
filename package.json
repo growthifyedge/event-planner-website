@@ -1,0 +1,46 @@
+{
+  "name": "event-planner-website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "seed": "node scripts/seed.mjs",
+    "optimize:images": "node scripts/optimize-images.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@hookform/resolvers": "^3.10.0",
+    "bcryptjs": "^2.4.3",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.18.2",
+    "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^1.17.0",
+    "mongoose": "^8.24.0",
+    "next": "^15.5.19",
+    "nodemailer": "^6.10.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-hook-form": "^7.78.0",
+    "tailwind-merge": "^2.6.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.5.0",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^15.5.19",
+    "postcss": "^8.5.15",
+    "sharp": "^0.35.0",
+    "tailwindcss": "^3.4.19"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}

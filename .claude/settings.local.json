@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(node --version)",
+      "PowerShell(npm --version)",
+      "PowerShell(npx --version)",
+      "PowerShell(Get-ChildItem -Force E:\\\\Event-Planner-Website | Select-Object Name, Length, Mode; \"----\"; \\(Get-Command mongod -ErrorAction SilentlyContinue\\).Source; \"git:\"; \\(Get-Command git -ErrorAction SilentlyContinue\\).Source)",
+      "mcp__57822720-06ab-48fb-93bc-ca2209340942__account_balance",
+      "mcp__57822720-06ab-48fb-93bc-ca2209340942__images_models_list",
+      "mcp__57822720-06ab-48fb-93bc-ca2209340942__images_generate",
+      "Bash(cd /e/Event-Planner-Website && tail -60 .data/dev-err.log | sed 's/\\\\x1b\\\\[[0-9;]*m//g')",
+      "Bash(node -e \"console.log\\(require\\('./package.json'\\).type\\)\")"
+    ]
+  }
+}
