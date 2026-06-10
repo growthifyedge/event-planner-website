@@ -3,7 +3,7 @@ import { ArrowRight, Star, Check, Clock } from 'lucide-react';
 import Photo from '@/components/ui/Photo';
 import Reveal from '@/components/ui/Reveal';
 import Container from '@/components/ui/Container';
-import { cta, conversion, socialProof } from '@/data/site';
+import { site, cta, conversion, socialProof } from '@/data/site';
 
 export default function Hero() {
   return (
@@ -41,7 +41,7 @@ export default function Hero() {
           </Reveal>
           <Reveal delay={0.16}>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-cream-200/85 text-pretty">
-              Lumière is a luxury event atelier designing weddings, galas and private
+              {site.name} is a luxury event atelier designing weddings, galas and private
               celebrations that feel effortless, deeply personal and impossibly beautiful.
             </p>
           </Reveal>

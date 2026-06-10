@@ -10,7 +10,7 @@ import { site } from '@/data/site';
 export const metadata = {
   title: 'Contact',
   description:
-    'Get in touch with Lumière Events. Call, email or send us a message — our atelier responds within one business day.',
+    'Get in touch with Festigo Events. Call, email or send us a message — our atelier responds within one business day.',
   alternates: { canonical: '/contact' },
 };
 

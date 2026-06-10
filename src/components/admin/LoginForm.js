@@ -51,7 +51,7 @@ export default function LoginForm() {
           autoComplete="username"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="admin@lumiere-events.com"
+          placeholder="you@example.com"
           className={inputClass}
         />
       </div>

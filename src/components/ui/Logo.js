@@ -1,20 +1,21 @@
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { site } from '@/data/site';
 
 export default function Logo({ light = false, className }) {
   return (
     <Link
       href="/"
-      aria-label="Lumière — home"
+      aria-label={`${site.name} — home`}
       className={cn('group inline-flex flex-col leading-none', className)}
     >
       <span
         className={cn(
-          'font-display text-2xl tracking-[0.22em] transition-colors',
+          'font-display text-2xl uppercase tracking-[0.22em] transition-colors',
           light ? 'text-cream-50' : 'text-ink-900'
         )}
       >
-        LUMIÈRE
+        {site.name}
       </span>
       <span
         className={cn(

@@ -11,7 +11,7 @@ import { aboutStory, values, team } from '@/data/about';
 export const metadata = {
   title: 'About',
   description:
-    'Meet Lumière — a luxury event planning atelier devoted to designing weddings, galas and private celebrations with impeccable detail and refined elegance.',
+    'Meet Festigo — a luxury event planning atelier devoted to designing weddings, galas and private celebrations with impeccable detail and refined elegance.',
   alternates: { canonical: '/about' },
 };
 
@@ -19,7 +19,7 @@ export default function AboutPage() {
   return (
     <>
       <PageHero
-        eyebrow="About Lumière"
+        eyebrow="About Festigo"
         title="Devoted to the art of celebration"
         description="A boutique atelier of designers and producers, crafting events that feel deeply personal and impossibly refined."
         image="/images/about.jpg"

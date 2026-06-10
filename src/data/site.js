@@ -5,29 +5,29 @@
 
 export const site = {
   // ── Brand identity ──
-  name: 'Lumière',
-  legalName: 'Lumière Events & Experiences',
+  name: 'Festigo',
+  legalName: 'Festigo Events & Experiences',
   tagline: 'Bespoke Luxury Event Planning',
   description:
-    'Lumière is a luxury event planning atelier crafting unforgettable weddings, corporate galas, milestone birthdays and private celebrations — designed with impeccable detail and refined elegance.',
+    'Festigo is a luxury event planning atelier crafting unforgettable weddings, corporate galas, milestone birthdays and private celebrations — designed with impeccable detail and refined elegance.',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
 
   // ── Contact (update display value AND href together) ──
-  email: 'hello@lumiere-events.com',
-  emailHref: 'mailto:hello@lumiere-events.com',
-  phone: '+1 (212) 555-0192',
-  phoneHref: 'tel:+12125550192',
+  email: 'growthifyedge@gmail.com',
+  emailHref: 'mailto:growthifyedge@gmail.com',
+  phone: '+92 (330) 259-1796',
+  phoneHref: 'tel:+923302591796',
   // WhatsApp: the digits in wa.me must be the number in international format, no "+" or spaces.
-  whatsapp: '+1 (212) 555-0192',
+  whatsapp: '+92 (330) 259-1796',
   whatsappHref:
-    'https://wa.me/12125550192?text=Hello%20Lum%C3%A8re!%20I%27d%20love%20to%20discuss%20planning%20an%20event.',
+    'https://wa.me/923302591796?text=Hello%20Festigo!%20I%27d%20love%20to%20discuss%20planning%20an%20event.',
 
   // ── Office address ──
   address: {
-    line1: '121 Madison Avenue, Suite 1200',
-    line2: 'New York, NY 10016',
+    line1: 'Shop No 2 Street No 2, Plot No 6C DHA Phase V Badar Commercial',
+    line2: 'Karachi, 74900',
   },
-  hours: 'Monday – Friday · 9am – 6pm EST',
+  hours: 'Monday – Friday · 9am – 6pm PST',
   founded: 2009,
   socials: [
     { name: 'Instagram', href: 'https://instagram.com', icon: 'Instagram' },

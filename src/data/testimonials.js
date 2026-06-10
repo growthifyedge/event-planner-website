@@ -3,7 +3,7 @@
 export const testimonials = [
   {
     quote:
-      'Lumière turned our wedding into a living dream. Every detail was considered, every moment effortless. Our guests still say it was the most beautiful event they have ever attended.',
+      'Festigo turned our wedding into a living dream. Every detail was considered, every moment effortless. Our guests still say it was the most beautiful event they have ever attended.',
     name: 'Isabella & James Hartwell',
     role: 'Garden Estate Wedding · Tuscany',
     rating: 5,
@@ -38,7 +38,7 @@ export const testimonials = [
   },
   {
     quote:
-      'Our anniversary dinner was styled so beautifully I cried when I walked in. Lumière understands how to make people feel something.',
+      'Our anniversary dinner was styled so beautifully I cried when I walked in. Festigo understands how to make people feel something.',
     name: 'David & Rachel Goldberg',
     role: '25th Anniversary · Private Estate',
     rating: 5,

@@ -17,6 +17,7 @@ import {
   Inbox,
 } from 'lucide-react';
 import { formatDate, formatDateTime, cn } from '@/lib/utils';
+import { site } from '@/data/site';
 
 const FILTERS = [
   { key: 'all', label: 'All' },
@@ -134,7 +135,7 @@ export default function InquiryDashboard() {
       <header className="sticky top-0 z-30 border-b border-cream-50/10 bg-ink-950 text-cream-50">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
           <div className="flex items-center gap-3">
-            <span className="font-display text-xl tracking-[0.22em]">LUMIÈRE</span>
+            <span className="font-display text-xl uppercase tracking-[0.22em]">{site.name}</span>
             <span className="hidden text-[10px] uppercase tracking-luxe text-gold-400 sm:inline">
               Admin Suite
             </span>

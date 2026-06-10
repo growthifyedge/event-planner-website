@@ -1,7 +1,8 @@
 import nodemailer from 'nodemailer';
 import { formatDate } from './utils';
+import { site } from '@/data/site';
 
-const FROM = process.env.EMAIL_FROM || 'Lumière Events <hello@lumiere-events.com>';
+const FROM = process.env.EMAIL_FROM || `${site.name} <${site.email}>`;
 
 function isConfigured() {
   return Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
@@ -26,7 +27,7 @@ const wrap = (title, inner) => `
   <div style="margin:0;padding:32px 0;background:#f7f2e9;font-family:Georgia,'Times New Roman',serif;color:#121013;">
     <div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #efe7d6;border-radius:16px;overflow:hidden;">
       <div style="background:#121013;padding:28px 32px;text-align:center;">
-        <div style="font-size:24px;letter-spacing:6px;color:#c8a24a;font-weight:600;">LUMIÈRE</div>
+        <div style="font-size:24px;letter-spacing:6px;color:#c8a24a;font-weight:600;text-transform:uppercase;">${site.name}</div>
         <div style="font-size:10px;letter-spacing:4px;color:#e8d9be;text-transform:uppercase;margin-top:6px;">Events &amp; Experiences</div>
       </div>
       <div style="padding:32px;">
@@ -34,7 +35,7 @@ const wrap = (title, inner) => `
         ${inner}
       </div>
       <div style="background:#faf6ee;padding:18px 32px;text-align:center;font-size:11px;color:#726c73;font-family:Arial,sans-serif;">
-        Lumière Events &amp; Experiences · 121 Madison Avenue, New York, NY
+        ${site.legalName} · ${site.address.line1}, ${site.address.line2}
       </div>
     </div>
   </div>`;
@@ -90,7 +91,7 @@ export async function sendClientConfirmation(inquiry) {
 
   const html = wrap('Thank you, ' + inquiry.name.split(' ')[0], `
     <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#4a454b;margin:0 0 16px;">
-      We are delighted you are considering Lumière for your
+      We are delighted you are considering ${site.name} for your
       <strong>${inquiry.eventType.toLowerCase()}</strong>. Your inquiry has been received
       and a member of our atelier will personally reach out within one business day to
       begin shaping your vision.
@@ -103,13 +104,13 @@ export async function sendClientConfirmation(inquiry) {
       <span style="display:inline-block;height:1px;width:60px;background:#c8a24a;"></span>
     </div>
     <p style="font-family:Georgia,serif;font-size:15px;text-align:center;color:#121013;margin:20px 0 0;">
-      With warm regards,<br/><em>The Lumière Atelier</em>
+      With warm regards,<br/><em>The ${site.name} Atelier</em>
     </p>`);
 
   await getTransporter().sendMail({
     from: FROM,
     to: inquiry.email,
-    subject: 'We received your inquiry — Lumière Events',
+    subject: `We received your inquiry — ${site.name}`,
     html,
   });
   return { sent: true };

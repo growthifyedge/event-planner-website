@@ -2,7 +2,7 @@ export const aboutStory = {
   eyebrow: 'Our Story',
   title: 'An atelier devoted to the art of celebration',
   paragraphs: [
-    'Lumière was founded in 2009 on a simple belief: that the most meaningful moments of our lives deserve to be held with extraordinary care. What began as a single wedding in a candlelit loft has grown into a full-service luxury event atelier trusted by discerning clients across the world.',
+    'Festigo was founded in 2009 on a simple belief: that the most meaningful moments of our lives deserve to be held with extraordinary care. What began as a single wedding in a candlelit loft has grown into a full-service luxury event atelier trusted by discerning clients across the world.',
     'We are designers, producers and obsessive perfectionists. We craft events that feel deeply personal yet impeccably refined — where every flower, every flame and every fold of linen has been considered. Our role is to carry the weight of the details so that you, and everyone you love, can simply be present.',
   ],
   signature: 'Camille Laurent, Founder & Creative Director',

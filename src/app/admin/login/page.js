@@ -1,4 +1,5 @@
 import LoginForm from '@/components/admin/LoginForm';
+import { site } from '@/data/site';
 
 export const dynamic = 'force-dynamic';
 export const metadata = {
@@ -12,7 +13,7 @@ export default function AdminLoginPage() {
       <div className="bg-noise absolute inset-0 opacity-[0.05]" />
       <div className="relative w-full max-w-md">
         <div className="text-center">
-          <div className="font-display text-3xl tracking-[0.22em] text-cream-50">LUMIÈRE</div>
+          <div className="font-display text-3xl uppercase tracking-[0.22em] text-cream-50">{site.name}</div>
           <div className="mt-1.5 text-[10px] uppercase tracking-luxe text-gold-400">
             Atelier Admin Suite
           </div>

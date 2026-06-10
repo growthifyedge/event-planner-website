@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { site } from '@/data/site';
 
 const GRADIENTS = [
   'linear-gradient(135deg, #1a171c 0%, #2a2230 55%, #43321a 100%)',
@@ -63,8 +64,8 @@ export default function Photo({
     >
       {showPlaceholder && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6 text-center">
-          <span className="font-display text-xl tracking-[0.2em] text-cream-50/90 sm:text-2xl">
-            LUMIÈRE
+          <span className="font-display text-xl uppercase tracking-[0.2em] text-cream-50/90 sm:text-2xl">
+            {site.name}
           </span>
           <span className="h-px w-8 bg-gold-400/70" />
           {label && (

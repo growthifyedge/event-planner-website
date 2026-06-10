@@ -8,7 +8,7 @@ import { site, trustBadges } from '@/data/site';
 export const metadata = {
   title: 'Plan Your Event',
   description:
-    'Start planning your luxury wedding, corporate event, birthday or private party with Lumière. Share your details for a complimentary, bespoke proposal.',
+    'Start planning your luxury wedding, corporate event, birthday or private party with Festigo. Share your details for a complimentary, bespoke proposal.',
   alternates: { canonical: '/booking' },
 };
 

@@ -11,7 +11,7 @@ import { testimonials } from '@/data/testimonials';
 export const metadata = {
   title: 'Testimonials',
   description:
-    'Read what our clients say about working with Lumière — five-star luxury weddings, corporate galas and private celebrations.',
+    'Read what our clients say about working with Festigo — five-star luxury weddings, corporate galas and private celebrations.',
   alternates: { canonical: '/testimonials' },
 };
 

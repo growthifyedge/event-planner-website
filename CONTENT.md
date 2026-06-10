@@ -34,39 +34,39 @@ anything in the checklist below (except the hero headline, which is noted).
 
 ## 1. Contact email — `src/data/site.js`
 ```js
-email: 'hello@lumiere-events.com',
-emailHref: 'mailto:hello@lumiere-events.com',   // ← update this too
+email: 'growthifyedge@gmail.com',
+emailHref: 'mailto:growthifyedge@gmail.com',   // ← update this too
 ```
 
 ## 2. Phone number — `src/data/site.js`
 ```js
-phone: '+1 (212) 555-0192',
-phoneHref: 'tel:+12125550192',                  // ← digits only, no spaces/brackets
+phone: '+92 (330) 259-1796',
+phoneHref: 'tel:+923302591796',                  // ← digits only, no spaces/brackets
 ```
 
 ## 3. WhatsApp number — `src/data/site.js`
 ```js
-whatsapp: '+1 (212) 555-0192',
-whatsappHref: 'https://wa.me/12125550192?text=...',
+whatsapp: '+923302591796',
+whatsappHref: 'https://wa.me/923302591796?text=...',
 // In wa.me/<number>, use full international format, digits only (no "+", spaces, or brackets).
 // Example: +44 7700 900123  →  https://wa.me/447700900123
 ```
 
 ## 4. Office address — `src/data/site.js`
 ```js
-address: { line1: '121 Madison Avenue, Suite 1200', line2: 'New York, NY 10016' },
-hours: 'Monday – Friday · 9am – 6pm EST',
+address: { line1: 'Shop No 2 Street No 2, Plot No 6C DHA Phase V Badar Commercial', line2: 'Karachi, 74900' },
+hours: 'Monday – Friday · 9am – 6pm PST',
 ```
 
 ## 5. Brand name / tagline / description — `src/data/site.js`
 ```js
-name: 'Lumière',
-legalName: 'Lumière Events & Experiences',
+name: 'Festigo',
+legalName: 'Festigo Events & Experiences',
 tagline: 'Bespoke Luxury Event Planning',
-description: 'Lumière is a luxury event planning atelier …',   // used in SEO + footer
+description: 'Festigo is a luxury event planning atelier …',   // used in SEO + footer
 founded: 2009,
 ```
-> The brand wordmark ("LUMIÈRE") also appears in `src/components/ui/Logo.js` and in the email
+> The brand wordmark ("Festigo") also appears in `src/components/ui/Logo.js` and in the email
 > template `src/lib/email.js` — change those if you rename the brand.
 
 ## 6. Social media links — `src/data/site.js`

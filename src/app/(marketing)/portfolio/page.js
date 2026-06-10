@@ -6,7 +6,7 @@ import CTASection from '@/components/sections/CTASection';
 export const metadata = {
   title: 'Portfolio',
   description:
-    'Explore a gallery of luxury weddings, corporate galas, milestone birthdays and private celebrations designed and produced by Lumière.',
+    'Explore a gallery of luxury weddings, corporate galas, milestone birthdays and private celebrations designed and produced by Festigo.',
   alternates: { canonical: '/portfolio' },
 };
 
