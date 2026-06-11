@@ -10,11 +10,11 @@ export const EVENT_TYPES = [
 ];
 
 export const BUDGET_RANGES = [
-  'Under Rs 10,000',
-  'Rs 10,000 – Rs 25,000',
-  'Rs 25,000 – Rs 50,000',
-  'Rs 50,000 – Rs 100,000',
-  'Rs 100,000+',
+  'Under Rs 500,000',
+  'Rs 500,000 – Rs 1,500,000',
+  'Rs 1,500,000 – Rs 3,000,000',
+  'Rs 3,000,000 – Rs 7,500,000',
+  'Rs 7,500,000+',
 ];
 
 const optionalString = (max) =>

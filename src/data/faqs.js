@@ -9,7 +9,7 @@ export const faqs = [
   },
   {
     q: 'What is your typical investment range?',
-    a: 'Our planning packages begin at Rs 4,500 for month-of coordination and scale with the complexity of your event. Most full-service celebrations invest between Rs 12,000 and Rs 45,000 in planning and design.',
+    a: 'Our planning packages begin at Rs 250,000 for month-of coordination and scale with the complexity of your event. Most full-service celebrations invest between Rs 750,000 and Rs 2,000,000 in planning and design.',
   },
   {
     q: 'Do you work with our preferred vendors?',

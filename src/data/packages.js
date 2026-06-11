@@ -1,8 +1,8 @@
 export const packages = [
   {
-    name: 'The Essence',
+    name: 'Signature Events',
     tagline: 'Month-of coordination',
-    priceFrom: 'Rs 4,500',
+    priceFrom: 'Rs 250,000',
     description:
       'For couples and hosts who have planned the details and want a seasoned team to bring it all together flawlessly.',
     features: [
@@ -15,13 +15,13 @@ export const packages = [
     featured: false,
   },
   {
-    name: 'The Signature',
+    name: 'Luxury Weddings',
     tagline: 'Full-service planning & design',
-    priceFrom: 'Rs 12,000',
+    priceFrom: 'Rs 750,000',
     description:
       'Our most-loved experience — comprehensive planning and bespoke design from first idea to final farewell.',
     features: [
-      'Everything in The Essence',
+      'Everything in Signature Events',
       'Bespoke design & styling concept',
       'Full vendor curation & management',
       'Budget design & tracking',
@@ -31,13 +31,13 @@ export const packages = [
     featured: true,
   },
   {
-    name: 'The Atelier',
+    name: 'Elite Experiences',
     tagline: 'Luxury & destination, fully bespoke',
-    priceFrom: 'Rs 30,000',
+    priceFrom: 'Rs 2,000,000',
     description:
       'A white-glove, fully bespoke production for landmark celebrations and destination events — no detail spared.',
     features: [
-      'Everything in The Signature',
+      'Everything in Luxury Weddings',
       'Destination & multi-day events',
       'Guest travel & accommodation',
       'Custom fabrication & installations',
