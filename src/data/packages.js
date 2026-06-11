@@ -2,7 +2,7 @@ export const packages = [
   {
     name: 'The Essence',
     tagline: 'Month-of coordination',
-    priceFrom: '$4,500',
+    priceFrom: 'Rs 4,500',
     description:
       'For couples and hosts who have planned the details and want a seasoned team to bring it all together flawlessly.',
     features: [
@@ -17,7 +17,7 @@ export const packages = [
   {
     name: 'The Signature',
     tagline: 'Full-service planning & design',
-    priceFrom: '$12,000',
+    priceFrom: 'Rs 12,000',
     description:
       'Our most-loved experience — comprehensive planning and bespoke design from first idea to final farewell.',
     features: [
@@ -33,7 +33,7 @@ export const packages = [
   {
     name: 'The Atelier',
     tagline: 'Luxury & destination, fully bespoke',
-    priceFrom: '$30,000',
+    priceFrom: 'Rs 30,000',
     description:
       'A white-glove, fully bespoke production for landmark celebrations and destination events — no detail spared.',
     features: [
