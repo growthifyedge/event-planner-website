@@ -7,6 +7,8 @@ import { SESSION_COOKIE, verifySessionToken } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
+// Give SMTP enough time to complete within the function lifetime (Vercel).
+export const maxDuration = 30;
 
 // ── Public: submit an inquiry ───────────────────────────────────────────────
 export async function POST(request) {
@@ -38,11 +40,23 @@ export async function POST(request) {
   try {
     const inquiry = await createInquiry(data);
 
-    // Email notifications are best-effort: never fail the request on email error.
-    Promise.allSettled([
+    // IMPORTANT: await the email sends. On serverless (Vercel) any work that
+    // isn't awaited is frozen the moment the response returns, so fire-and-forget
+    // never actually opens the SMTP connection ("No outgoing requests" in logs).
+    // We still return 201 even if email fails (the inquiry is saved), but we now
+    // surface email failures in the logs instead of swallowing them.
+    const results = await Promise.allSettled([
       sendInquiryNotification(inquiry),
       sendClientConfirmation(inquiry),
-    ]).catch(() => {});
+    ]);
+    results.forEach((r, i) => {
+      if (r.status === 'rejected') {
+        console.error(
+          `[POST /api/inquiries] email ${i === 0 ? 'notification' : 'confirmation'} failed:`,
+          r.reason
+        );
+      }
+    });
 
     return NextResponse.json(
       { ok: true, id: inquiry._id, message: 'Inquiry received.' },
