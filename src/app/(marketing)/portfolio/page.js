@@ -21,6 +21,7 @@ export const metadata = {
 async function getPortfolioItems() {
   try {
     const media = await listMedia();
+    console.log(`[portfolio] listMedia returned ${media?.length ?? 0} item(s)`);
     if (media && media.length) {
       return media.map((m) => ({
         id: m._id,

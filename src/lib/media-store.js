@@ -12,21 +12,22 @@ import Media from '@/models/Media';
 const DATA_DIR = path.join(process.cwd(), '.data');
 const FILE = path.join(DATA_DIR, 'media.json');
 
-let backend = null;
-
+// Resolve per call — do NOT cache the choice. Caching a one-time cold-start
+// failure in a module-level variable would pin a serverless instance to the
+// (empty, read-only) file fallback for its whole lifetime. connectDB() already
+// caches the successful connection globally, so re-checking here is cheap.
 async function resolveBackend() {
-  if (backend) return backend;
   if (!process.env.MONGODB_URI) {
-    backend = 'file';
-    return backend;
+    console.warn('[media-store] MONGODB_URI is not set — using local file store.');
+    return 'file';
   }
   try {
     await connectDB();
-    backend = 'mongo';
-  } catch {
-    backend = 'file';
+    return 'mongo';
+  } catch (err) {
+    console.error('[media-store] MongoDB connection failed — using file fallback:', err);
+    return 'file';
   }
-  return backend;
 }
 
 async function readStore() {
