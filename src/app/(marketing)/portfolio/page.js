@@ -2,6 +2,9 @@ import PageHero from '@/components/ui/PageHero';
 import Section from '@/components/ui/Section';
 import PortfolioGallery from '@/components/sections/PortfolioGallery';
 import CTASection from '@/components/sections/CTASection';
+import { listMedia } from '@/lib/media-store';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Portfolio',
@@ -10,7 +13,30 @@ export const metadata = {
   alternates: { canonical: '/portfolio' },
 };
 
-export default function PortfolioPage() {
+// Admin-managed media (from the Portfolio Manager). Returns null when empty so
+// the gallery falls back to its built-in curated set.
+async function getPortfolioItems() {
+  try {
+    const media = await listMedia();
+    if (media && media.length) {
+      return media.map((m) => ({
+        id: m._id,
+        title: m.title,
+        category: m.category,
+        type: m.type,
+        src: m.url,
+        span: 'normal',
+      }));
+    }
+  } catch {
+    // ignore — fall through to the curated fallback
+  }
+  return null;
+}
+
+export default async function PortfolioPage() {
+  const items = await getPortfolioItems();
+
   return (
     <>
       <PageHero
@@ -22,7 +48,7 @@ export default function PortfolioPage() {
       />
 
       <Section>
-        <PortfolioGallery />
+        <PortfolioGallery items={items || undefined} />
       </Section>
 
       <CTASection />

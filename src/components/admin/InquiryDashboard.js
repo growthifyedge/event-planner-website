@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   LogOut,
@@ -140,13 +141,24 @@ export default function InquiryDashboard() {
               Admin Suite
             </span>
           </div>
-          <button
-            type="button"
-            onClick={logout}
-            className="inline-flex items-center gap-2 rounded-full border border-cream-50/20 px-4 py-2 text-xs uppercase tracking-widest transition hover:border-gold-400 hover:text-gold-300"
-          >
-            <LogOut className="h-4 w-4" /> Sign out
-          </button>
+          <nav className="flex items-center gap-1 text-[11px] uppercase tracking-widest">
+            <Link href="/admin" className="rounded-full bg-cream-50/10 px-3 py-2 text-gold-300">
+              Inquiries
+            </Link>
+            <Link
+              href="/admin/portfolio"
+              className="rounded-full px-3 py-2 text-cream-200/70 transition hover:text-gold-300"
+            >
+              Portfolio
+            </Link>
+            <button
+              type="button"
+              onClick={logout}
+              className="ml-2 inline-flex items-center gap-2 rounded-full border border-cream-50/20 px-4 py-2 transition hover:border-gold-400 hover:text-gold-300"
+            >
+              <LogOut className="h-4 w-4" /> Sign out
+            </button>
+          </nav>
         </div>
       </header>
 
