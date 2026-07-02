@@ -4,7 +4,10 @@ import PortfolioGallery from '@/components/sections/PortfolioGallery';
 import CTASection from '@/components/sections/CTASection';
 import { listMedia } from '@/lib/media-store';
 
+// Always render fresh so newly uploaded media appears immediately (no caching).
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 export const metadata = {
   title: 'Portfolio',
@@ -28,8 +31,10 @@ async function getPortfolioItems() {
         span: 'normal',
       }));
     }
-  } catch {
-    // ignore — fall through to the curated fallback
+  } catch (err) {
+    // Surface DB failures in the Vercel runtime logs instead of silently
+    // falling back (helps diagnose a missing/unreachable MONGODB_URI).
+    console.error('[portfolio] failed to load media from database:', err);
   }
   return null;
 }
