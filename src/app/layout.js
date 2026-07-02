@@ -32,7 +32,7 @@ export const metadata = {
     'destination weddings',
     'Pakistan event planner',
     'Karachi event planner',
-    'Lahore wedding planner',
+    'Pakistan wedding planner',
   ],
   authors: [{ name: site.legalName }],
   creator: site.legalName,

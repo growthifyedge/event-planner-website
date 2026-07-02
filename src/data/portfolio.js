@@ -10,7 +10,7 @@ export const portfolio = [
   {
     title: 'Candlelit Garden Wedding',
     category: 'Weddings',
-    location: 'Lahore',
+    location: 'Karachi',
     year: '2025',
     image: '/images/portfolio-reception.jpg',
     span: 'tall',
@@ -26,7 +26,7 @@ export const portfolio = [
   {
     title: 'Garden Florals in Bloom',
     category: 'Weddings',
-    location: 'Islamabad',
+    location: 'Karachi',
     year: '2024',
     image: '/images/portfolio-floral.jpg',
     span: 'normal',
@@ -34,7 +34,7 @@ export const portfolio = [
   {
     title: 'Golden Hour Reception',
     category: 'Weddings',
-    location: 'Hunza Valley',
+    location: 'Karachi',
     year: '2024',
     image: '/images/hero.jpg',
     span: 'normal',
@@ -50,7 +50,7 @@ export const portfolio = [
   {
     title: 'Bespoke Table Stories',
     category: 'Weddings',
-    location: 'Faisalabad',
+    location: 'Karachi',
     year: '2024',
     image: '/images/portfolio-place-setting.jpg',
     span: 'normal',
@@ -58,7 +58,7 @@ export const portfolio = [
   {
     title: 'The Grand Ballroom Gala',
     category: 'Corporate',
-    location: 'Rawalpindi',
+    location: 'Karachi',
     year: '2024',
     image: '/images/portfolio-venue.jpg',
     span: 'wide',
@@ -66,7 +66,7 @@ export const portfolio = [
   {
     title: 'Rooftop Cocktail Reception',
     category: 'Private Parties',
-    location: 'Lahore',
+    location: 'Karachi',
     year: '2025',
     image: '/images/private-party.jpg',
     span: 'normal',
@@ -74,7 +74,7 @@ export const portfolio = [
   {
     title: 'Ceremony Under the Arch',
     category: 'Weddings',
-    location: 'Peshawar',
+    location: 'Karachi',
     year: '2025',
     image: '/images/wedding.jpg',
     span: 'normal',

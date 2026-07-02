@@ -5,7 +5,7 @@ export const testimonials = [
     quote:
       'Festigo turned our wedding into a living dream. Every detail was considered, every moment effortless. Our guests still say it was the most beautiful event they have ever attended.',
     name: 'Ayesha & Hamza Sheikh',
-    role: 'Garden Estate Wedding · Lahore',
+    role: 'Garden Estate Wedding · Karachi',
     rating: 5,
   },
   {
@@ -26,21 +26,21 @@ export const testimonials = [
     quote:
       'Impeccable taste and flawless logistics. Our gala raised a record amount and felt like the most glamorous night of the year.',
     name: 'Sana Iqbal',
-    role: 'Annual Charity Gala · Islamabad',
+    role: 'Annual Charity Gala · Karachi',
     rating: 5,
   },
   {
     quote:
       'They handled a 300-guest destination wedding across three days without a single misstep. Calm, creative and endlessly professional.',
     name: 'Fatima & Usman Raza',
-    role: 'Destination Wedding · Hunza Valley',
+    role: 'Destination Wedding · Karachi',
     rating: 5,
   },
   {
     quote:
       'Our anniversary dinner was styled so beautifully I cried when I walked in. Festigo understands how to make people feel something.',
     name: 'Kamran & Hina Siddiqui',
-    role: '25th Anniversary · Lahore',
+    role: '25th Anniversary · Karachi',
     rating: 5,
   },
 ];
