@@ -24,7 +24,7 @@ export default function ServicesPage() {
       <PageHero
         eyebrow="Our Services"
         title="Everything, exquisitely handled"
-        description="From first idea to final farewell — a complete atelier of capabilities, all under one roof."
+        description="From first idea to final farewell — a complete suite of capabilities, all under one roof."
         image="/images/corporate.jpg"
         imageLabel="Corporate Events"
       />

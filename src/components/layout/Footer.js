@@ -107,7 +107,7 @@ export default function Footer() {
           <p>
             © {year} {site.legalName}. All rights reserved.
           </p>
-          <p className="tracking-wide">Crafted with intention in New York City.</p>
+          <p className="tracking-wide">Crafted with intention in Karachi, Pakistan.</p>
         </div>
       </div>
     </footer>

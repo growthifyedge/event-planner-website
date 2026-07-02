@@ -55,7 +55,7 @@ export default function HomePage() {
           <Reveal>
             <Photo
               src="/images/about.jpg"
-              label="Our Atelier"
+              label="Our Studio"
               className="aspect-[4/5] w-full rounded-2xl"
             />
           </Reveal>
@@ -91,7 +91,7 @@ export default function HomePage() {
         <SectionHeading
           eyebrow="Our services"
           title="Everything, handled with grace"
-          description="A full atelier of capabilities under one roof — so your celebration is cohesive, calm and unforgettable."
+          description="A full suite of capabilities under one roof — so your celebration is cohesive, calm and unforgettable."
         />
         <div className="mt-12">
           <ServicesGrid />

@@ -16,11 +16,11 @@ const jsonLd = {
   address: {
     '@type': 'PostalAddress',
     streetAddress: site.address.line1,
-    addressLocality: 'New York',
-    addressRegion: 'NY',
-    addressCountry: 'US',
+    addressLocality: 'Karachi',
+    addressRegion: 'Sindh',
+    addressCountry: 'PK',
   },
-  areaServed: 'Worldwide',
+  areaServed: 'Pakistan',
   foundingDate: String(site.founded),
 };
 

@@ -79,7 +79,7 @@ export default function BookingForm() {
             </span>
             <h3 className="mt-6 font-display text-3xl text-ink-900">Thank you</h3>
             <p className="mt-3 max-w-md text-ink-500">
-              Your inquiry has landed safely with our atelier. A member of our team will
+              Your inquiry has landed safely with our studio. A member of our team will
               reach out personally within one business day to begin shaping your celebration.
             </p>
             <button
@@ -122,7 +122,7 @@ export default function BookingForm() {
                 <input
                   id="name"
                   type="text"
-                  placeholder="Isabella Hartwell"
+                  placeholder="Ayesha Khan"
                   aria-invalid={!!errors.name}
                   className={cn('form-input', errors.name && 'form-input-invalid')}
                   {...register('name')}

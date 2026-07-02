@@ -41,7 +41,7 @@ export default function Hero() {
           </Reveal>
           <Reveal delay={0.16}>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-cream-200/85 text-pretty">
-              {site.name} is a luxury event atelier designing weddings, galas and private
+              {site.name} is a luxury event studio designing weddings, galas and private
               celebrations that feel effortless, deeply personal and impossibly beautiful.
             </p>
           </Reveal>

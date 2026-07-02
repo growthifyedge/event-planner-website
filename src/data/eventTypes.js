@@ -42,11 +42,11 @@ export const eventTypes = [
     slug: 'private-parties',
     title: 'Private Parties',
     image: '/images/private-party.jpg',
-    tagline: 'Soirées with a signature',
+    tagline: 'Evenings with a signature',
     description:
-      'Cocktail soirées, anniversaries and intimate dinners — exquisitely hosted experiences for you and your guests.',
+      'Cocktail receptions, anniversaries and intimate dinners — exquisitely hosted experiences for you and your guests.',
     highlights: [
-      'Cocktail soirées & dinners',
+      'Cocktail receptions & dinners',
       'Rooftop & estate experiences',
       'Mixology, catering & ambience',
     ],

@@ -21,6 +21,6 @@ export const faqs = [
   },
   {
     q: 'What happens after I submit an inquiry?',
-    a: 'A member of our atelier personally reviews your details and reaches out within one business day to schedule a complimentary discovery consultation.',
+    a: 'A member of our studio personally reviews your details and reaches out within one business day to schedule a complimentary discovery consultation.',
   },
 ];

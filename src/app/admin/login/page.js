@@ -15,7 +15,7 @@ export default function AdminLoginPage() {
         <div className="text-center">
           <div className="font-display text-3xl uppercase tracking-[0.22em] text-cream-50">{site.name}</div>
           <div className="mt-1.5 text-[10px] uppercase tracking-luxe text-gold-400">
-            Atelier Admin Suite
+            Studio Admin Suite
           </div>
         </div>
         <div className="mt-8 rounded-2xl border border-cream-50/10 bg-ink-900/60 p-8 shadow-luxe backdrop-blur">

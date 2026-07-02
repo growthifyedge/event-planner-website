@@ -16,7 +16,7 @@ anything in the checklist below (except the hero headline, which is noted).
 - [ ] Office address → `src/data/site.js`
 - [ ] Brand name / tagline / description → `src/data/site.js`
 - [ ] Social media links → `src/data/site.js`
-- [ ] Press names ("As featured in") → `src/data/site.js`
+- [ ] Trust indicators (hero ribbon) → `src/data/site.js`
 - [ ] Social proof (hero rating, "500+ celebrations") → `src/data/site.js`
 - [ ] Stats band (15+ years, 500+ events, …) → `src/data/stats.js`
 - [ ] Testimonials → `src/data/testimonials.js`
@@ -79,11 +79,11 @@ socials: [
 ```
 Replace each `href`. Available `icon` values: `Instagram`, `Facebook`, `Linkedin`, `Sparkles`.
 
-## 7. Press names ("As featured in") — `src/data/site.js`
+## 7. Trust indicators (ribbon under the hero) — `src/data/site.js`
 ```js
-export const press = ['VOGUE', 'TATLER', "HARPER'S BAZAAR", 'THE KNOT', 'BRIDES', 'CONDÉ NAST'];
+export const trustIndicators = ['AWARD-WINNING', 'FULLY INSURED', '5-STAR RATED', 'VETTED VENDORS', 'NATIONWIDE SERVICE', '100% CONFIDENTIAL'];
 ```
-Replace with real placements, or set to `[]` to hide the press bar entirely.
+Short, generic assurances only — NOT media/press brands. Set to `[]` to hide the ribbon.
 (Rendered by `src/components/sections/TrustBar.js` — no edit needed there.)
 
 ## 8. Social proof — hero rating & testimonials caption — `src/data/site.js`

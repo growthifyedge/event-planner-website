@@ -9,7 +9,7 @@ export const site = {
   legalName: 'Festigo Events & Experiences',
   tagline: 'Bespoke Luxury Event Planning',
   description:
-    'Festigo is a luxury event planning atelier crafting unforgettable weddings, corporate galas, milestone birthdays and private celebrations — designed with impeccable detail and refined elegance.',
+    'Festigo is a luxury event planning studio crafting unforgettable weddings, corporate galas, milestone birthdays and private celebrations — designed with impeccable detail and refined elegance.',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
 
   // ── Contact (update display value AND href together) ──
@@ -65,14 +65,15 @@ export const trustBadges = [
   'Award-winning & fully insured',
 ];
 
-// Press / "as featured in" wordmarks (replace with real placements, or set to [] to hide the bar).
-export const press = [
-  'VOGUE',
-  'TATLER',
-  "HARPER'S BAZAAR",
-  'THE KNOT',
-  'BRIDES',
-  'CONDÉ NAST',
+// Generic trust indicators shown in the ribbon beneath the hero (rendered by TrustBar.js).
+// Short, factual assurances — NOT media/press brands. Set to [] to hide the ribbon.
+export const trustIndicators = [
+  'AWARD-WINNING',
+  'FULLY INSURED',
+  '5-STAR RATED',
+  'VETTED VENDORS',
+  'NATIONWIDE SERVICE',
+  '100% CONFIDENTIAL',
 ];
 
 // Social proof strings shown in the hero pill and above the home testimonials.

@@ -93,7 +93,7 @@ export async function sendClientConfirmation(inquiry) {
     <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#4a454b;margin:0 0 16px;">
       We are delighted you are considering ${site.name} for your
       <strong>${inquiry.eventType.toLowerCase()}</strong>. Your inquiry has been received
-      and a member of our atelier will personally reach out within one business day to
+      and a member of our studio will personally reach out within one business day to
       begin shaping your vision.
     </p>
     <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#4a454b;margin:0 0 24px;">
@@ -104,7 +104,7 @@ export async function sendClientConfirmation(inquiry) {
       <span style="display:inline-block;height:1px;width:60px;background:#c8a24a;"></span>
     </div>
     <p style="font-family:Georgia,serif;font-size:15px;text-align:center;color:#121013;margin:20px 0 0;">
-      With warm regards,<br/><em>The ${site.name} Atelier</em>
+      With warm regards,<br/><em>The ${site.name} Studio</em>
     </p>`);
 
   await getTransporter().sendMail({

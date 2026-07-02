@@ -8,17 +8,17 @@ export const categories = [
 
 export const portfolio = [
   {
-    title: 'Candlelit Vineyard Wedding',
+    title: 'Candlelit Garden Wedding',
     category: 'Weddings',
-    location: 'Tuscany, Italy',
+    location: 'Lahore',
     year: '2025',
     image: '/images/portfolio-reception.jpg',
     span: 'tall',
   },
   {
-    title: 'The Aurelia Product Launch',
+    title: 'Karachi Tech Summit',
     category: 'Corporate',
-    location: 'New York, NY',
+    location: 'Karachi',
     year: '2025',
     image: '/images/portfolio-corporate.jpg',
     span: 'wide',
@@ -26,7 +26,7 @@ export const portfolio = [
   {
     title: 'Garden Florals in Bloom',
     category: 'Weddings',
-    location: 'Hudson Valley, NY',
+    location: 'Islamabad',
     year: '2024',
     image: '/images/portfolio-floral.jpg',
     span: 'normal',
@@ -34,15 +34,15 @@ export const portfolio = [
   {
     title: 'Golden Hour Reception',
     category: 'Weddings',
-    location: 'Amalfi Coast',
+    location: 'Hunza Valley',
     year: '2024',
     image: '/images/hero.jpg',
     span: 'normal',
   },
   {
-    title: 'A Manhattan 40th',
+    title: 'A Karachi 40th',
     category: 'Birthdays',
-    location: 'Manhattan, NY',
+    location: 'Karachi',
     year: '2025',
     image: '/images/birthday.jpg',
     span: 'tall',
@@ -50,7 +50,7 @@ export const portfolio = [
   {
     title: 'Bespoke Table Stories',
     category: 'Weddings',
-    location: 'Newport, RI',
+    location: 'Faisalabad',
     year: '2024',
     image: '/images/portfolio-place-setting.jpg',
     span: 'normal',
@@ -58,15 +58,15 @@ export const portfolio = [
   {
     title: 'The Grand Ballroom Gala',
     category: 'Corporate',
-    location: 'The Plaza, NY',
+    location: 'Rawalpindi',
     year: '2024',
     image: '/images/portfolio-venue.jpg',
     span: 'wide',
   },
   {
-    title: 'Rooftop Cocktail Soirée',
+    title: 'Rooftop Cocktail Reception',
     category: 'Private Parties',
-    location: 'SoHo, NY',
+    location: 'Lahore',
     year: '2025',
     image: '/images/private-party.jpg',
     span: 'normal',
@@ -74,7 +74,7 @@ export const portfolio = [
   {
     title: 'Ceremony Under the Arch',
     category: 'Weddings',
-    location: 'Sonoma, CA',
+    location: 'Peshawar',
     year: '2025',
     image: '/images/wedding.jpg',
     span: 'normal',

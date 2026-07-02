@@ -11,7 +11,7 @@ import { aboutStory, values, team } from '@/data/about';
 export const metadata = {
   title: 'About',
   description:
-    'Meet Festigo — a luxury event planning atelier devoted to designing weddings, galas and private celebrations with impeccable detail and refined elegance.',
+    'Meet Festigo — a luxury event planning studio devoted to designing weddings, galas and private celebrations with impeccable detail and refined elegance.',
   alternates: { canonical: '/about' },
 };
 
@@ -21,15 +21,15 @@ export default function AboutPage() {
       <PageHero
         eyebrow="About Festigo"
         title="Devoted to the art of celebration"
-        description="A boutique atelier of designers and producers, crafting events that feel deeply personal and impossibly refined."
+        description="A boutique studio of designers and producers, crafting events that feel deeply personal and impossibly refined."
         image="/images/about.jpg"
-        imageLabel="Our Atelier"
+        imageLabel="Our Studio"
       />
 
       <Section>
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <Reveal>
-            <Photo src="/images/about.jpg" label="The Atelier" className="aspect-[4/5] w-full rounded-2xl" />
+            <Photo src="/images/about.jpg" label="Our Studio" className="aspect-[4/5] w-full rounded-2xl" />
           </Reveal>
           <div>
             <span className="eyebrow">{aboutStory.eyebrow}</span>
@@ -74,7 +74,7 @@ export default function AboutPage() {
       <Section>
         <SectionHeading
           eyebrow="The people"
-          title="Meet the atelier"
+          title="Meet the studio"
           description="A small, senior team — so the people you meet are the people who craft your day."
         />
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
