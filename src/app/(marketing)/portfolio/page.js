@@ -30,9 +30,6 @@ export default async function PortfolioPage() {
   }
 
   const hasMedia = first.total > 0;
-  console.log(
-    `[portfolio] page 1: ${first.items.length}/${first.total} item(s) from ${hasMedia ? 'DATABASE' : 'fallback'}`
-  );
 
   return (
     <>

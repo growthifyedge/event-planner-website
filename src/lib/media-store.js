@@ -149,18 +149,6 @@ export const getFeaturedMedia = (limit = 12) =>
 export const getHomepageMedia = (limit = 8) =>
   queryMedia({ publishedOnly: true, homepageFeatured: true, page: 1, pageSize: limit });
 
-// Back-compat: return all records (used by the temporary debug route).
-export async function listMedia() {
-  const be = await resolveBackend();
-  if (be === 'mongo') {
-    const docs = await Media.find({}).sort({ createdAt: -1 }).lean();
-    return docs.map(serialize);
-  }
-  const items = await readStore();
-  items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  return items.map(serialize);
-}
-
 // ── CRUD ──
 export async function createMedia(data) {
   const be = await resolveBackend();
