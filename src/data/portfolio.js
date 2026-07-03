@@ -80,3 +80,16 @@ export const portfolio = [
     span: 'normal',
   },
 ];
+
+// Curated static set, normalized to the gallery's item shape. Used as the
+// fallback on /portfolio (only when no uploaded media exists) and the home preview.
+export const staticPortfolioItems = portfolio.map((p, i) => ({
+  id: `static-${i}`,
+  title: p.title,
+  category: p.category,
+  type: 'image',
+  src: p.image,
+  location: p.location,
+  year: p.year,
+  span: p.span,
+}));

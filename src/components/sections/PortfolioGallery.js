@@ -4,35 +4,25 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MapPin, Play } from 'lucide-react';
 import Photo from '@/components/ui/Photo';
-import { portfolio as staticPortfolio, categories } from '@/data/portfolio';
+import { staticPortfolioItems, categories } from '@/data/portfolio';
 import { cn } from '@/lib/utils';
 
 const aspectFor = (span) =>
   span === 'tall' ? 'aspect-[3/4]' : span === 'wide' ? 'aspect-[3/2]' : 'aspect-square';
 
-// Normalized fallback from the curated static set (used on the home preview and
-// when the DB-backed library is empty).
-const STATIC_ITEMS = staticPortfolio.map((p, i) => ({
-  id: `static-${i}`,
-  title: p.title,
-  category: p.category,
-  type: 'image',
-  src: p.image,
-  location: p.location,
-  year: p.year,
-  span: p.span,
-}));
-
-export default function PortfolioGallery({ items, preview = false }) {
+// Renders exactly the `items` it is given. The server (portfolio page) decides
+// database-vs-fallback, so this component has NO fallback of its own — DB items
+// can never be swapped for the static set here. `items` defaults to the curated
+// set only when the prop is omitted entirely (e.g. the home-page preview).
+export default function PortfolioGallery({ items = staticPortfolioItems, preview = false }) {
   const [active, setActive] = useState('All');
   const [selected, setSelected] = useState(null);
 
-  const source = items && items.length ? items : STATIC_ITEMS;
   const list = preview
-    ? source.slice(0, 6)
+    ? items.slice(0, 6)
     : active === 'All'
-      ? source
-      : source.filter((p) => p.category === active);
+      ? items
+      : items.filter((p) => p.category === active);
 
   useEffect(() => {
     if (!selected) return;

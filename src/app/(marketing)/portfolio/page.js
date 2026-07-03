@@ -3,6 +3,7 @@ import Section from '@/components/ui/Section';
 import PortfolioGallery from '@/components/sections/PortfolioGallery';
 import CTASection from '@/components/sections/CTASection';
 import { listMedia } from '@/lib/media-store';
+import { staticPortfolioItems } from '@/data/portfolio';
 
 // Always render fresh so newly uploaded media appears immediately (no caching).
 export const dynamic = 'force-dynamic';
@@ -16,9 +17,9 @@ export const metadata = {
   alternates: { canonical: '/portfolio' },
 };
 
-// Admin-managed media (from the Portfolio Manager). Returns null when empty so
-// the gallery falls back to its built-in curated set.
-async function getPortfolioItems() {
+// Uploaded media (Cloudinary + MongoDB) normalized to the gallery item shape.
+// Returns [] on empty/error.
+async function getDbItems() {
   try {
     const media = await listMedia();
     console.log(`[portfolio] listMedia returned ${media?.length ?? 0} item(s)`);
@@ -33,15 +34,21 @@ async function getPortfolioItems() {
       }));
     }
   } catch (err) {
-    // Surface DB failures in the Vercel runtime logs instead of silently
-    // falling back (helps diagnose a missing/unreachable MONGODB_URI).
     console.error('[portfolio] failed to load media from database:', err);
   }
-  return null;
+  return [];
 }
 
 export default async function PortfolioPage() {
-  const items = await getPortfolioItems();
+  const dbItems = await getDbItems();
+
+  // The SERVER decides the final list: uploaded media when present, otherwise
+  // the curated fallback. The gallery renders exactly this list — it has no
+  // fallback of its own, so DB items can never be replaced by the static set.
+  const items = dbItems.length > 0 ? dbItems : staticPortfolioItems;
+  console.log(
+    `[portfolio] rendering ${items.length} item(s) from ${dbItems.length > 0 ? 'DATABASE' : 'fallback'}`
+  );
 
   return (
     <>
@@ -54,7 +61,7 @@ export default async function PortfolioPage() {
       />
 
       <Section>
-        <PortfolioGallery items={items || undefined} />
+        <PortfolioGallery items={items} />
       </Section>
 
       <CTASection />
