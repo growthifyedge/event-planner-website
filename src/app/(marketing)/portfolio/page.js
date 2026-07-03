@@ -31,6 +31,8 @@ async function getDbItems() {
         type: m.type,
         src: m.url,
         span: 'normal',
+        // Uploaded media is any aspect ratio → show the full image (contain).
+        fit: 'contain',
       }));
     }
   } catch (err) {
@@ -60,7 +62,7 @@ export default async function PortfolioPage() {
         imageLabel="Selected Work"
       />
 
-      <Section>
+      <Section className="!pt-8 sm:!pt-10 lg:!pt-12">
         <PortfolioGallery items={items} />
       </Section>
 

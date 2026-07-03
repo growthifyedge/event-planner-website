@@ -10,6 +10,10 @@ import { cn } from '@/lib/utils';
 const aspectFor = (span) =>
   span === 'tall' ? 'aspect-[3/4]' : span === 'wide' ? 'aspect-[3/2]' : 'aspect-square';
 
+// Elegant dark/gold backdrop behind contained (uploaded) media — matches Photo's.
+const CONTAIN_BG =
+  'radial-gradient(120% 90% at 50% 12%, rgba(200,162,74,0.16), transparent 55%), linear-gradient(180deg, #1a171c 0%, #0d0b0f 100%)';
+
 // Renders exactly the `items` it is given. The server (portfolio page) decides
 // database-vs-fallback, so this component has NO fallback of its own — DB items
 // can never be swapped for the static set here. `items` defaults to the curated
@@ -39,21 +43,28 @@ export default function PortfolioGallery({ items = staticPortfolioItems, preview
     };
   }, [selected]);
 
-  const cardInner = (p) => (
+  const cardInner = (p) => {
+    const contain = p.fit === 'contain';
+    // Uploaded media (any aspect) gets a consistent premium frame + contain so
+    // the full image is visible; the curated fallback keeps its cover framing.
+    const frame = contain ? 'aspect-[4/5]' : aspectFor(p.span);
+    return (
     <div className="relative">
       {p.type === 'video' ? (
         <div
           className={cn(
-            aspectFor(p.span),
-            'relative w-full overflow-hidden bg-ink-900 transition-transform duration-700 ease-luxe group-hover:scale-105'
+            frame,
+            'relative w-full overflow-hidden transition-transform duration-700 ease-luxe group-hover:scale-105',
+            !contain && 'bg-ink-900'
           )}
+          style={contain ? { backgroundImage: CONTAIN_BG } : undefined}
         >
           <video
             src={p.src}
             muted
             playsInline
             preload="metadata"
-            className="h-full w-full object-cover"
+            className={cn('h-full w-full', contain ? 'object-contain' : 'object-cover')}
           />
           <span className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-ink-950/50 text-cream-50 backdrop-blur-sm">
             <Play className="h-5 w-5 translate-x-0.5 fill-current" />
@@ -63,8 +74,9 @@ export default function PortfolioGallery({ items = staticPortfolioItems, preview
         <Photo
           src={p.src}
           label={p.category}
+          fit={contain ? 'contain' : 'cover'}
           className={cn(
-            aspectFor(p.span),
+            frame,
             'w-full transition-transform duration-700 ease-luxe group-hover:scale-105'
           )}
         />
@@ -81,7 +93,8 @@ export default function PortfolioGallery({ items = staticPortfolioItems, preview
         )}
       </div>
     </div>
-  );
+    );
+  };
 
   const renderCard = (p, i) => (
     <motion.button
@@ -104,7 +117,7 @@ export default function PortfolioGallery({ items = staticPortfolioItems, preview
   return (
     <div>
       {!preview && (
-        <div className="mb-10 flex flex-wrap justify-center gap-2 sm:gap-3">
+        <div className="mb-7 flex flex-wrap justify-center gap-2 sm:gap-3">
           {categories.map((c) => (
             <button
               key={c}

@@ -19,6 +19,11 @@ function pickGradient(seed = '') {
   return GRADIENTS[hash % GRADIENTS.length];
 }
 
+// Elegant, consistent backdrop behind `object-contain` images so the letterbox
+// area (from odd aspect ratios) reads as an intentional dark-and-gold frame.
+const CONTAIN_BG =
+  'radial-gradient(120% 90% at 50% 12%, rgba(200,162,74,0.16), transparent 55%), linear-gradient(180deg, #1a171c 0%, #0d0b0f 100%)';
+
 /**
  * Resilient image component.
  * - Always paints an elegant gradient placeholder behind the photo.
@@ -37,6 +42,7 @@ export default function Photo({
   className,
   imgClassName,
   overlay = false,
+  fit = 'cover',
 }) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -60,7 +66,7 @@ export default function Photo({
   return (
     <div
       className={cn('relative isolate overflow-hidden bg-ink-900', className)}
-      style={{ backgroundImage: gradient }}
+      style={{ backgroundImage: fit === 'contain' ? CONTAIN_BG : gradient }}
     >
       {showPlaceholder && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6 text-center">
@@ -87,7 +93,8 @@ export default function Photo({
           onLoad={() => setLoaded(true)}
           onError={() => setFailed(true)}
           className={cn(
-            'absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-luxe',
+            'absolute inset-0 h-full w-full transition-opacity duration-700 ease-luxe',
+            fit === 'contain' ? 'object-contain' : 'object-cover',
             loaded ? 'opacity-100' : 'opacity-0',
             imgClassName
           )}
