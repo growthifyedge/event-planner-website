@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { SESSION_COOKIE, verifySessionToken } from '@/lib/auth';
-import { createMedia, listMedia } from '@/lib/media-store';
+import { createMedia, queryMedia } from '@/lib/media-store';
 import { MEDIA_CATEGORIES } from '@/models/Media';
 
 export const runtime = 'nodejs';
@@ -12,13 +12,28 @@ async function requireAuth() {
   return Boolean(await verifySessionToken(token));
 }
 
-export async function GET() {
+export async function GET(request) {
   if (!(await requireAuth())) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  const { searchParams } = new URL(request.url);
+  const opts = {
+    category: searchParams.get('category') || 'All',
+    type: searchParams.get('type') || 'All',
+    search: searchParams.get('search') || '',
+    sort: searchParams.get('sort') || 'newest',
+    page: parseInt(searchParams.get('page') || '1', 10),
+    pageSize: Math.min(48, parseInt(searchParams.get('pageSize') || '24', 10) || 24),
+  };
   try {
-    const media = await listMedia();
-    return NextResponse.json({ media });
+    const r = await queryMedia(opts);
+    return NextResponse.json({
+      media: r.items,
+      total: r.total,
+      page: r.page,
+      pageSize: r.pageSize,
+      hasMore: r.hasMore,
+    });
   } catch (err) {
     console.error('[GET /api/admin/media]', err);
     return NextResponse.json({ error: 'Failed to load media.' }, { status: 500 });

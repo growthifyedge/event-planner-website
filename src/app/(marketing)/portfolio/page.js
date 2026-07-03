@@ -1,8 +1,9 @@
 import PageHero from '@/components/ui/PageHero';
 import Section from '@/components/ui/Section';
 import PortfolioGallery from '@/components/sections/PortfolioGallery';
+import PortfolioBrowser from '@/components/sections/PortfolioBrowser';
 import CTASection from '@/components/sections/CTASection';
-import { listMedia } from '@/lib/media-store';
+import { getPortfolioMedia } from '@/lib/media-store';
 import { staticPortfolioItems } from '@/data/portfolio';
 
 // Always render fresh so newly uploaded media appears immediately (no caching).
@@ -17,39 +18,20 @@ export const metadata = {
   alternates: { canonical: '/portfolio' },
 };
 
-// Uploaded media (Cloudinary + MongoDB) normalized to the gallery item shape.
-// Returns [] on empty/error.
-async function getDbItems() {
+const PAGE_SIZE = 12;
+
+export default async function PortfolioPage() {
+  // First page only (paginated) — the browser loads more on demand.
+  let first = { items: [], total: 0, hasMore: false };
   try {
-    const media = await listMedia();
-    console.log(`[portfolio] listMedia returned ${media?.length ?? 0} item(s)`);
-    if (media && media.length) {
-      return media.map((m) => ({
-        id: m._id,
-        title: m.title,
-        category: m.category,
-        type: m.type,
-        src: m.url,
-        span: 'normal',
-        // Uploaded media is any aspect ratio → show the full image (contain).
-        fit: 'contain',
-      }));
-    }
+    first = await getPortfolioMedia({ category: 'All', page: 1, pageSize: PAGE_SIZE });
   } catch (err) {
     console.error('[portfolio] failed to load media from database:', err);
   }
-  return [];
-}
 
-export default async function PortfolioPage() {
-  const dbItems = await getDbItems();
-
-  // The SERVER decides the final list: uploaded media when present, otherwise
-  // the curated fallback. The gallery renders exactly this list — it has no
-  // fallback of its own, so DB items can never be replaced by the static set.
-  const items = dbItems.length > 0 ? dbItems : staticPortfolioItems;
+  const hasMedia = first.total > 0;
   console.log(
-    `[portfolio] rendering ${items.length} item(s) from ${dbItems.length > 0 ? 'DATABASE' : 'fallback'}`
+    `[portfolio] page 1: ${first.items.length}/${first.total} item(s) from ${hasMedia ? 'DATABASE' : 'fallback'}`
   );
 
   return (
@@ -63,7 +45,16 @@ export default async function PortfolioPage() {
       />
 
       <Section className="!pt-8 sm:!pt-10 lg:!pt-12">
-        <PortfolioGallery items={items} />
+        {hasMedia ? (
+          <PortfolioBrowser
+            initialItems={first.items}
+            initialHasMore={first.hasMore}
+            pageSize={PAGE_SIZE}
+          />
+        ) : (
+          // Fallback: no uploaded media yet → curated static set (unchanged).
+          <PortfolioGallery items={staticPortfolioItems} />
+        )}
       </Section>
 
       <CTASection />

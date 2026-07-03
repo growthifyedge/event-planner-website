@@ -43,6 +43,8 @@ export default function Photo({
   imgClassName,
   overlay = false,
   fit = 'cover',
+  srcSet,
+  sizes,
 }) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -87,6 +89,8 @@ export default function Photo({
         <img
           ref={imgRef}
           src={src}
+          srcSet={srcSet}
+          sizes={sizes}
           alt={alt}
           loading={priority ? 'eager' : 'lazy'}
           decoding="async"

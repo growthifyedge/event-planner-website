@@ -5,6 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, MapPin, Play } from 'lucide-react';
 import Photo from '@/components/ui/Photo';
 import { staticPortfolioItems, categories } from '@/data/portfolio';
+import {
+  optimizedImage,
+  imageSrcSet,
+  videoPoster,
+  videoPosterSrcSet,
+} from '@/lib/cloudinary-url';
 import { cn } from '@/lib/utils';
 
 const aspectFor = (span) =>
@@ -14,22 +20,26 @@ const aspectFor = (span) =>
 const CONTAIN_BG =
   'radial-gradient(120% 90% at 50% 12%, rgba(200,162,74,0.16), transparent 55%), linear-gradient(180deg, #1a171c 0%, #0d0b0f 100%)';
 
-// Renders exactly the `items` it is given. The server (portfolio page) decides
-// database-vs-fallback, so this component has NO fallback of its own — DB items
-// can never be swapped for the static set here. `items` defaults to the curated
-// set only when the prop is omitted entirely (e.g. the home-page preview).
-export default function PortfolioGallery({ items = staticPortfolioItems, preview = false }) {
+const CARD_SIZES = '(min-width: 1024px) 22rem, (min-width: 640px) 45vw, 90vw';
+
+// Presentational gallery: renders exactly the `items` it is given (grid + lightbox).
+// The server decides database-vs-fallback; this has no fallback of its own.
+// `items` defaults to the curated set only when omitted (e.g. the home preview).
+export default function PortfolioGallery({
+  items = staticPortfolioItems,
+  preview = false,
+  showFilters = true,
+}) {
   const [active, setActive] = useState('All');
   const [selected, setSelected] = useState(null);
 
+  const filtersOn = !preview && showFilters;
   const list = preview
     ? items.slice(0, 6)
-    : active === 'All'
+    : !filtersOn || active === 'All'
       ? items
       : items.filter((p) => p.category === active);
 
-  // Masonry columns leave big empty gaps with only 1–2 tiles, so center those
-  // in a constrained flex row instead. 3+ tiles use the responsive masonry.
   const few = list.length > 0 && list.length <= 2;
 
   useEffect(() => {
@@ -45,54 +55,50 @@ export default function PortfolioGallery({ items = staticPortfolioItems, preview
 
   const cardInner = (p) => {
     const contain = p.fit === 'contain';
-    // Uploaded media (any aspect) gets a consistent premium frame + contain so
-    // the full image is visible; the curated fallback keeps its cover framing.
     const frame = contain ? 'aspect-[4/5]' : aspectFor(p.span);
+    const mediaClass = cn(
+      frame,
+      'w-full transition-transform duration-700 ease-luxe group-hover:scale-105'
+    );
     return (
-    <div className="relative">
-      {p.type === 'video' ? (
-        <div
-          className={cn(
-            frame,
-            'relative w-full overflow-hidden transition-transform duration-700 ease-luxe group-hover:scale-105',
-            !contain && 'bg-ink-900'
-          )}
-          style={contain ? { backgroundImage: CONTAIN_BG } : undefined}
-        >
-          <video
-            src={p.src}
-            muted
-            playsInline
-            preload="metadata"
-            className={cn('h-full w-full', contain ? 'object-contain' : 'object-cover')}
+      <div className="relative">
+        {p.type === 'video' ? (
+          <>
+            {/* Lightweight poster only — the video file loads in the lightbox. */}
+            <Photo
+              src={videoPoster(p.src, 900)}
+              srcSet={videoPosterSrcSet(p.src)}
+              sizes={CARD_SIZES}
+              label={p.category}
+              fit={contain ? 'contain' : 'cover'}
+              className={mediaClass}
+            />
+            <span className="pointer-events-none absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-ink-950/50 text-cream-50 backdrop-blur-sm">
+              <Play className="h-5 w-5 translate-x-0.5 fill-current" />
+            </span>
+          </>
+        ) : (
+          <Photo
+            src={optimizedImage(p.src, 900)}
+            srcSet={imageSrcSet(p.src)}
+            sizes={CARD_SIZES}
+            label={p.category}
+            fit={contain ? 'contain' : 'cover'}
+            className={mediaClass}
           />
-          <span className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-ink-950/50 text-cream-50 backdrop-blur-sm">
-            <Play className="h-5 w-5 translate-x-0.5 fill-current" />
-          </span>
-        </div>
-      ) : (
-        <Photo
-          src={p.src}
-          label={p.category}
-          fit={contain ? 'contain' : 'cover'}
-          className={cn(
-            frame,
-            'w-full transition-transform duration-700 ease-luxe group-hover:scale-105'
-          )}
-        />
-      )}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950/85 via-transparent to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
-      <div className="absolute inset-x-0 bottom-0 p-5">
-        <span className="text-[10px] uppercase tracking-luxe text-gold-300">{p.category}</span>
-        <h3 className="mt-1 font-display text-xl text-cream-50">{p.title}</h3>
-        {(p.location || p.year) && (
-          <p className="mt-1 flex items-center gap-1.5 text-xs text-cream-200/70">
-            <MapPin className="h-3 w-3" />
-            {[p.location, p.year].filter(Boolean).join(' · ')}
-          </p>
         )}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950/85 via-transparent to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
+        <div className="absolute inset-x-0 bottom-0 p-5">
+          <span className="text-[10px] uppercase tracking-luxe text-gold-300">{p.category}</span>
+          <h3 className="mt-1 font-display text-xl text-cream-50">{p.title}</h3>
+          {(p.location || p.year) && (
+            <p className="mt-1 flex items-center gap-1.5 text-xs text-cream-200/70">
+              <MapPin className="h-3 w-3" />
+              {[p.location, p.year].filter(Boolean).join(' · ')}
+            </p>
+          )}
+        </div>
       </div>
-    </div>
     );
   };
 
@@ -116,7 +122,7 @@ export default function PortfolioGallery({ items = staticPortfolioItems, preview
 
   return (
     <div>
-      {!preview && (
+      {filtersOn && (
         <div className="mb-7 flex flex-wrap justify-center gap-2 sm:gap-3">
           {categories.map((c) => (
             <button
@@ -182,6 +188,7 @@ export default function PortfolioGallery({ items = staticPortfolioItems, preview
               {selected.type === 'video' ? (
                 <video
                   src={selected.src}
+                  poster={videoPoster(selected.src, 1200)}
                   controls
                   autoPlay
                   playsInline
@@ -189,7 +196,9 @@ export default function PortfolioGallery({ items = staticPortfolioItems, preview
                 />
               ) : (
                 <Photo
-                  src={selected.src}
+                  src={optimizedImage(selected.src, 1600)}
+                  srcSet={imageSrcSet(selected.src, [768, 1200, 1600])}
+                  sizes="(min-width: 1024px) 56rem, 92vw"
                   label={selected.category}
                   priority
                   className="aspect-[3/2] w-full overflow-hidden rounded-2xl"
