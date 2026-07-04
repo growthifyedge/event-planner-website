@@ -13,14 +13,14 @@ export const site = {
   url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
 
   // ── Contact (update display value AND href together) ──
-  email: 'growthifyedge@gmail.com',
-  emailHref: 'mailto:growthifyedge@gmail.com',
-  phone: '+92 (330) 259-1796',
-  phoneHref: 'tel:+923302591796',
+  email: 'festigoeventplanner@gmail.com',
+  emailHref: 'mailto:festigoeventplanner@gmail.com',
+  phone: '+92 315 1114406',
+  phoneHref: 'tel:+923151114406',
   // WhatsApp: the digits in wa.me must be the number in international format, no "+" or spaces.
-  whatsapp: '+92 (330) 259-1796',
+  whatsapp: '+92 315 1114406',
   whatsappHref:
-    'https://wa.me/923302591796?text=Hello%20Festigo!%20I%27d%20love%20to%20discuss%20planning%20an%20event.',
+    'https://wa.me/923151114406?text=Hello%20Festigo!%20I%27d%20love%20to%20discuss%20planning%20an%20event.',
 
   // ── Office address ──
   address: {

@@ -34,20 +34,20 @@ anything in the checklist below (except the hero headline, which is noted).
 
 ## 1. Contact email — `src/data/site.js`
 ```js
-email: 'growthifyedge@gmail.com',
-emailHref: 'mailto:growthifyedge@gmail.com',   // ← update this too
+email: 'festigoeventplanner@gmail.com',
+emailHref: 'mailto:festigoeventplanner@gmail.com',   // ← update this too
 ```
 
 ## 2. Phone number — `src/data/site.js`
 ```js
-phone: '+92 (330) 259-1796',
-phoneHref: 'tel:+923302591796',                  // ← digits only, no spaces/brackets
+phone: '+92 315 1114406',
+phoneHref: 'tel:+923151114406',                  // ← digits only, no spaces/brackets
 ```
 
 ## 3. WhatsApp number — `src/data/site.js`
 ```js
-whatsapp: '+923302591796',
-whatsappHref: 'https://wa.me/923302591796?text=...',
+whatsapp: '+92 315 1114406',
+whatsappHref: 'https://wa.me/923151114406?text=...',
 // In wa.me/<number>, use full international format, digits only (no "+", spaces, or brackets).
 // Example: +44 7700 900123  →  https://wa.me/447700900123
 ```
