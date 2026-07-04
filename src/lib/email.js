@@ -23,6 +23,54 @@ function getTransporter() {
   return transporter;
 }
 
+// --- TEMP DIAGNOSTIC (remove after email config is verified) ------------------
+// Logs the email configuration + exact send errors. NEVER logs SMTP_PASS.
+function maskedUserDomain(user) {
+  if (!user) return '(not set)';
+  const s = String(user);
+  const at = s.lastIndexOf('@');
+  return at >= 0 ? `***@${s.slice(at + 1)}` : '***(no domain)';
+}
+
+function logEmailDiag(context) {
+  console.info('[email:diag] config', {
+    context,
+    SMTP_HOST: process.env.SMTP_HOST || '(not set)',
+    SMTP_PORT: process.env.SMTP_PORT || '(not set -> 587)',
+    SMTP_SECURE: process.env.SMTP_SECURE || '(not set -> false)',
+    SMTP_USER_exists: Boolean(process.env.SMTP_USER),
+    SMTP_USER_domain: maskedUserDomain(process.env.SMTP_USER),
+    EMAIL_FROM: process.env.EMAIL_FROM || '(not set -> site default)',
+    NOTIFICATION_EMAIL: process.env.NOTIFICATION_EMAIL || '(not set)',
+    // SMTP_PASS intentionally NOT logged.
+  });
+}
+
+async function sendWithDiag(context, mailOptions) {
+  try {
+    const info = await getTransporter().sendMail(mailOptions);
+    console.info('[email:diag] sendMail ok', {
+      context,
+      messageId: info?.messageId,
+      response: info?.response,
+    });
+    return info;
+  } catch (err) {
+    // Exact nodemailer/SMTP error — code, SMTP response code, failing command,
+    // message and the server's response text (none of these contain the password).
+    console.error('[email:diag] sendMail FAILED', {
+      context,
+      code: err?.code,
+      responseCode: err?.responseCode,
+      command: err?.command,
+      message: err?.message,
+      response: err?.response,
+    });
+    throw err;
+  }
+}
+// --- END TEMP DIAGNOSTIC ------------------------------------------------------
+
 const wrap = (title, inner) => `
   <div style="margin:0;padding:32px 0;background:#f7f2e9;font-family:Georgia,'Times New Roman',serif;color:#121013;">
     <div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #efe7d6;border-radius:16px;overflow:hidden;">
@@ -48,6 +96,7 @@ const row = (label, value) => `
 
 /** Notify the studio that a new inquiry arrived. */
 export async function sendInquiryNotification(inquiry) {
+  logEmailDiag('notification'); // TEMP DIAGNOSTIC
   // Studio alert recipient: prefer explicit env vars, else default to the
   // site contact inbox (festigoeventplanner@gmail.com) — never an old address.
   const to = process.env.NOTIFICATION_EMAIL || process.env.ADMIN_EMAIL || site.email;
@@ -74,7 +123,7 @@ export async function sendInquiryNotification(inquiry) {
     </p>
     ${details}`);
 
-  await getTransporter().sendMail({
+  await sendWithDiag('notification', {
     from: FROM,
     to,
     replyTo: inquiry.email,
@@ -86,6 +135,7 @@ export async function sendInquiryNotification(inquiry) {
 
 /** Send the client a polished confirmation that we received their request. */
 export async function sendClientConfirmation(inquiry) {
+  logEmailDiag('confirmation'); // TEMP DIAGNOSTIC
   if (!isConfigured()) {
     console.info('[email] SMTP not configured — skipping client confirmation for', inquiry.email);
     return { skipped: true };
@@ -109,7 +159,7 @@ export async function sendClientConfirmation(inquiry) {
       With warm regards,<br/><em>The ${site.name} Studio</em>
     </p>`);
 
-  await getTransporter().sendMail({
+  await sendWithDiag('confirmation', {
     from: FROM,
     to: inquiry.email,
     subject: `We received your inquiry — ${site.name}`,
