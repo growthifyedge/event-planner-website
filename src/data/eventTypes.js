@@ -1,6 +1,9 @@
 export const eventTypes = [
   {
     slug: 'weddings',
+    // Matches the media-library category so homepage/services art can be
+    // resolved from uploaded portfolio media (falls back to `image` below).
+    category: 'Weddings',
     title: 'Weddings',
     image: '/images/wedding.jpg',
     tagline: 'Timeless celebrations of love',
@@ -14,6 +17,7 @@ export const eventTypes = [
   },
   {
     slug: 'corporate',
+    category: 'Corporate',
     title: 'Corporate Events',
     image: '/images/corporate.jpg',
     tagline: 'Brand moments that resonate',
@@ -27,6 +31,7 @@ export const eventTypes = [
   },
   {
     slug: 'birthdays',
+    category: 'Birthdays',
     title: 'Birthdays',
     image: '/images/birthday.jpg',
     tagline: 'Milestones worth remembering',
@@ -40,6 +45,7 @@ export const eventTypes = [
   },
   {
     slug: 'private-parties',
+    category: 'Private Parties',
     title: 'Private Parties',
     image: '/images/private-party.jpg',
     tagline: 'Evenings with a signature',

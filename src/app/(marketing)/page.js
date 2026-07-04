@@ -19,6 +19,11 @@ import { socialProof } from '@/data/site';
 import { aboutStory } from '@/data/about';
 import { packagesNote } from '@/data/packages';
 
+// "What we create" category cards resolve to uploaded media at request time.
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
+
 const CenterLink = ({ href, children }) => (
   <Reveal className="mt-12 flex justify-center">
     <Link href={href} className="btn-outline">

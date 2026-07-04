@@ -149,6 +149,30 @@ export const getFeaturedMedia = (limit = 12) =>
 export const getHomepageMedia = (limit = 8) =>
   queryMedia({ publishedOnly: true, homepageFeatured: true, page: 1, pageSize: limit });
 
+// Newest published IMAGE url per category (homepage/services category art).
+// One tiny query per category; returns { [category]: url|null }. Defensive so a
+// failed lookup yields null and callers fall back to their bundled static image.
+export async function getCategoryImageMap(categories = []) {
+  const pairs = await Promise.all(
+    categories.map(async (category) => {
+      try {
+        const { items } = await queryMedia({
+          publishedOnly: true,
+          category,
+          type: 'image',
+          page: 1,
+          pageSize: 1,
+          sort: 'newest',
+        });
+        return [category, items[0]?.url ?? null];
+      } catch {
+        return [category, null];
+      }
+    })
+  );
+  return Object.fromEntries(pairs);
+}
+
 // ── CRUD ──
 export async function createMedia(data) {
   const be = await resolveBackend();

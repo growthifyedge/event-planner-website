@@ -2,9 +2,12 @@ import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import Photo from '@/components/ui/Photo';
 import Reveal from '@/components/ui/Reveal';
-import { eventTypes } from '@/data/eventTypes';
+import { getEventTypesWithMedia } from '@/lib/event-media';
 
-export default function EventTypesGrid() {
+export default async function EventTypesGrid() {
+  // Category art comes from uploaded media when available (static fallback).
+  const eventTypes = await getEventTypesWithMedia();
+
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {eventTypes.map((e, i) => (

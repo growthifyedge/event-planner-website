@@ -8,8 +8,13 @@ import Photo from '@/components/ui/Photo';
 import ServicesGrid from '@/components/sections/ServicesGrid';
 import ProcessSteps from '@/components/sections/ProcessSteps';
 import CTASection from '@/components/sections/CTASection';
-import { eventTypes } from '@/data/eventTypes';
+import { getEventTypesWithMedia } from '@/lib/event-media';
 import { cn } from '@/lib/utils';
+
+// Resolve the "By occasion" category images from uploaded media at request time.
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 export const metadata = {
   title: 'Services',
@@ -18,7 +23,8 @@ export const metadata = {
   alternates: { canonical: '/services' },
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const eventTypes = await getEventTypesWithMedia();
   return (
     <>
       <PageHero
