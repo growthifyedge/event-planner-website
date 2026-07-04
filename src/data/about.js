@@ -5,7 +5,7 @@ export const aboutStory = {
     'Festigo was founded in 2009 on a simple belief: that the most meaningful moments of our lives deserve to be held with extraordinary care. What began as a single wedding in a candlelit loft has grown into a full-service luxury event studio trusted by discerning clients across Pakistan.',
     'We are designers, producers and obsessive perfectionists. We craft events that feel deeply personal yet impeccably refined — where every flower, every flame and every fold of linen has been considered. Our role is to carry the weight of the details so that you, and everyone you love, can simply be present.',
   ],
-  signature: 'Mehreen Khan, Founder & Creative Director',
+  signature: 'Ejaz Alam, Founder & Creative Director',
 };
 
 export const values = [
@@ -36,7 +36,7 @@ export const values = [
 ];
 
 export const team = [
-  { name: 'Mehreen Khan', role: 'Founder & Creative Director', initials: 'MK' },
+  { name: 'Ejaz Alam', role: 'Founder & Creative Director', initials: 'EA' },
   { name: 'Hassan Ali', role: 'Head of Production', initials: 'HA' },
   { name: 'Ayesha Tariq', role: 'Lead Designer & Stylist', initials: 'AT' },
   { name: 'Bilal Ahsan', role: 'Client Experience Director', initials: 'BA' },
