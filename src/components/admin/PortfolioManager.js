@@ -17,10 +17,12 @@ import {
   Inbox,
   Search,
   Plus,
+  Star,
 } from 'lucide-react';
 import { site } from '@/data/site';
 import { cn } from '@/lib/utils';
 import { optimizedImage, videoPoster } from '@/lib/cloudinary-url';
+import { HOMEPAGE_PLACEMENTS, placementLabel } from '@/data/placements';
 
 const CATEGORIES = ['Weddings', 'Corporate', 'Birthdays', 'Private Parties'];
 const TYPE_FILTERS = [
@@ -59,6 +61,7 @@ export default function PortfolioManager() {
   const [editingId, setEditingId] = useState(null);
   const [editTitle, setEditTitle] = useState('');
   const [editCategory, setEditCategory] = useState(CATEGORIES[0]);
+  const [editPlacement, setEditPlacement] = useState('');
   const [selected, setSelected] = useState(new Set());
   const [confirm, setConfirm] = useState(null); // { ids, bulk }
 
@@ -140,6 +143,7 @@ export default function PortfolioManager() {
     setEditingId(item._id);
     setEditTitle(item.title);
     setEditCategory(item.category);
+    setEditPlacement(item.homepagePlacement || '');
   }
   async function saveEdit(id) {
     setBusyId(id);
@@ -147,7 +151,11 @@ export default function PortfolioManager() {
       const res = await fetch(`/api/admin/media/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: editTitle, category: editCategory }),
+        body: JSON.stringify({
+          title: editTitle,
+          category: editCategory,
+          homepagePlacement: editPlacement,
+        }),
       });
       if (res.ok) {
         setEditingId(null);
@@ -427,6 +435,24 @@ export default function PortfolioManager() {
                               <option key={c} value={c}>{c}</option>
                             ))}
                           </select>
+                          {item.type === 'image' ? (
+                            <select
+                              value={editPlacement}
+                              onChange={(e) => setEditPlacement(e.target.value)}
+                              className="form-input !py-2 text-sm"
+                              title="Pin this image to a homepage hero slot"
+                            >
+                              {HOMEPAGE_PLACEMENTS.map((p) => (
+                                <option key={p.value || 'none'} value={p.value}>
+                                  {p.value ? `Homepage: ${p.label}` : 'Homepage placement: None'}
+                                </option>
+                              ))}
+                            </select>
+                          ) : (
+                            <p className="text-[11px] text-ink-400">
+                              Homepage placement is available for images only.
+                            </p>
+                          )}
                           <div className="flex gap-2">
                             <button
                               type="button"
@@ -448,6 +474,11 @@ export default function PortfolioManager() {
                         <>
                           <div className="font-display text-lg text-ink-900">{item.title}</div>
                           <div className="text-[11px] uppercase tracking-widest text-gold-600">{item.category}</div>
+                          {item.homepagePlacement ? (
+                            <div className="mt-1.5 inline-flex items-center gap-1 rounded-full border border-gold-300 bg-gold-50 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-widest text-gold-700">
+                              <Star className="h-3 w-3 fill-current" /> {placementLabel(item.homepagePlacement)}
+                            </div>
+                          ) : null}
                           <div className="mt-3 flex items-center gap-2">
                             <button
                               type="button"

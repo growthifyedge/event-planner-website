@@ -56,6 +56,7 @@ function serialize(doc) {
     homepageFeatured: o.homepageFeatured ?? false,
     displayOrder: o.displayOrder ?? 0,
     isPublished: o.isPublished !== false,
+    homepagePlacement: o.homepagePlacement || '',
     createdAt: o.createdAt ? new Date(o.createdAt).toISOString() : null,
     updatedAt: o.updatedAt ? new Date(o.updatedAt).toISOString() : null,
   };
@@ -63,7 +64,7 @@ function serialize(doc) {
 
 const escapeRegex = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-function mongoFilter({ category, type, search, publishedOnly, featured, homepageFeatured }) {
+function mongoFilter({ category, type, search, publishedOnly, featured, homepageFeatured, homepagePlacement }) {
   const f = {};
   if (category && category !== 'All') f.category = category;
   if (type && type !== 'All' && (type === 'image' || type === 'video')) f.type = type;
@@ -71,6 +72,7 @@ function mongoFilter({ category, type, search, publishedOnly, featured, homepage
   if (publishedOnly) f.isPublished = { $ne: false };
   if (featured) f.featured = true;
   if (homepageFeatured) f.homepageFeatured = true;
+  if (homepagePlacement) f.homepagePlacement = homepagePlacement;
   if (search && String(search).trim()) {
     f.title = { $regex: escapeRegex(String(search).trim()), $options: 'i' };
   }
@@ -85,6 +87,7 @@ function fileMatch(item, o) {
   if (o.publishedOnly && item.isPublished === false) return false;
   if (o.featured && !item.featured) return false;
   if (o.homepageFeatured && !item.homepageFeatured) return false;
+  if (o.homepagePlacement && item.homepagePlacement !== o.homepagePlacement) return false;
   if (
     o.search &&
     String(o.search).trim() &&
@@ -149,28 +152,41 @@ export const getFeaturedMedia = (limit = 12) =>
 export const getHomepageMedia = (limit = 8) =>
   queryMedia({ publishedOnly: true, homepageFeatured: true, page: 1, pageSize: limit });
 
-// Newest published IMAGE url per category (homepage/services category art).
-// One tiny query per category; returns { [category]: url|null }. Defensive so a
-// failed lookup yields null and callers fall back to their bundled static image.
-export async function getCategoryImageMap(categories = []) {
-  const pairs = await Promise.all(
-    categories.map(async (category) => {
-      try {
-        const { items } = await queryMedia({
-          publishedOnly: true,
-          category,
-          type: 'image',
-          page: 1,
-          pageSize: 1,
-          sort: 'newest',
-        });
-        return [category, items[0]?.url ?? null];
-      } catch {
-        return [category, null];
-      }
-    })
-  );
-  return Object.fromEntries(pairs);
+// Resolve one category surface's hero image, in priority order:
+//   1) the image manually pinned to this homepage slot (placement)
+//   2) the newest published image in the category
+//   3) null  → caller keeps its bundled static fallback
+// Only images are eligible (a video can't back a hero <img>).
+export async function resolveCategoryImage({ placement, category } = {}) {
+  if (placement) {
+    try {
+      const { items } = await queryMedia({
+        publishedOnly: true,
+        homepagePlacement: placement,
+        type: 'image',
+        page: 1,
+        pageSize: 1,
+        sort: 'newest',
+      });
+      if (items[0]?.url) return items[0].url;
+    } catch {
+      /* fall through to the category default */
+    }
+  }
+  try {
+    const { items } = await queryMedia({
+      publishedOnly: true,
+      category,
+      type: 'image',
+      page: 1,
+      pageSize: 1,
+      sort: 'newest',
+    });
+    if (items[0]?.url) return items[0].url;
+  } catch {
+    /* fall through to the static fallback */
+  }
+  return null;
 }
 
 // ── CRUD ──
@@ -190,6 +206,7 @@ export async function createMedia(data) {
     displayOrder: 0,
     tags: [],
     isPublished: true,
+    homepagePlacement: '',
     createdAt: now,
     updatedAt: now,
   };
@@ -200,13 +217,30 @@ export async function createMedia(data) {
 
 export async function updateMedia(id, updates) {
   const be = await resolveBackend();
+  // Single-slot homepage placement: when pinning to a non-empty slot, clear
+  // that slot from every other item so only one image ever holds it.
+  const placement = updates.homepagePlacement;
   if (be === 'mongo') {
+    // Update the target first; only clear the slot from other items once we
+    // know the target exists — so a stale/bad id can never orphan a slot.
     const doc = await Media.findByIdAndUpdate(id, updates, { new: true });
-    return doc ? serialize(doc) : null;
+    if (!doc) return null;
+    if (placement) {
+      await Media.updateMany(
+        { homepagePlacement: placement, _id: { $ne: id } },
+        { $set: { homepagePlacement: '' } }
+      );
+    }
+    return serialize(doc);
   }
   const items = await readStore();
   const idx = items.findIndex((i) => i._id === id);
   if (idx === -1) return null;
+  if (placement) {
+    items.forEach((i) => {
+      if (i._id !== id && i.homepagePlacement === placement) i.homepagePlacement = '';
+    });
+  }
   items[idx] = { ...items[idx], ...updates, updatedAt: new Date().toISOString() };
   await writeStore(items);
   return serialize(items[idx]);

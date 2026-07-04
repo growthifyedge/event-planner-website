@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { HOMEPAGE_PLACEMENTS, HOMEPAGE_PLACEMENT_VALUES } from '@/data/placements';
 
 export const MEDIA_CATEGORIES = [
   'Weddings',
@@ -6,6 +7,9 @@ export const MEDIA_CATEGORIES = [
   'Birthdays',
   'Private Parties',
 ];
+
+// Re-export placement constants so server code can keep importing from the model.
+export { HOMEPAGE_PLACEMENTS, HOMEPAGE_PLACEMENT_VALUES };
 
 const MediaSchema = new mongoose.Schema(
   {
@@ -28,6 +32,8 @@ const MediaSchema = new mongoose.Schema(
     tags: { type: [String], default: [] },
     featuredVideo: { type: Boolean, default: false },
     isPublished: { type: Boolean, default: true },
+    // Manually pinned homepage/services hero slot ('' = none). See HOMEPAGE_PLACEMENTS.
+    homepagePlacement: { type: String, enum: HOMEPAGE_PLACEMENT_VALUES, default: '' },
   },
   { timestamps: true }
 );
@@ -39,5 +45,6 @@ MediaSchema.index({ type: 1, createdAt: -1 });
 MediaSchema.index({ isPublished: 1, createdAt: -1 });
 MediaSchema.index({ homepageFeatured: 1, displayOrder: 1 });
 MediaSchema.index({ featured: 1, createdAt: -1 });
+MediaSchema.index({ homepagePlacement: 1 });
 
 export default mongoose.models.Media || mongoose.model('Media', MediaSchema);

@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { SESSION_COOKIE, verifySessionToken } from '@/lib/auth';
 import { updateMedia, deleteMedia } from '@/lib/media-store';
 import { destroyAsset, isCloudinaryConfigured } from '@/lib/cloudinary';
-import { MEDIA_CATEGORIES } from '@/models/Media';
+import { MEDIA_CATEGORIES, HOMEPAGE_PLACEMENT_VALUES } from '@/models/Media';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -31,6 +31,13 @@ export async function PATCH(request, { params }) {
   }
   if (MEDIA_CATEGORIES.includes(body.category)) {
     updates.category = body.category;
+  }
+  // Homepage placement ('' clears it). Validated against the allowed slots.
+  if (
+    typeof body.homepagePlacement === 'string' &&
+    HOMEPAGE_PLACEMENT_VALUES.includes(body.homepagePlacement)
+  ) {
+    updates.homepagePlacement = body.homepagePlacement;
   }
   if (!Object.keys(updates).length) {
     return NextResponse.json({ error: 'Nothing to update.' }, { status: 400 });
