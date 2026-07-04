@@ -48,7 +48,9 @@ const row = (label, value) => `
 
 /** Notify the studio that a new inquiry arrived. */
 export async function sendInquiryNotification(inquiry) {
-  const to = process.env.NOTIFICATION_EMAIL || process.env.ADMIN_EMAIL;
+  // Studio alert recipient: prefer explicit env vars, else default to the
+  // site contact inbox (festigoeventplanner@gmail.com) — never an old address.
+  const to = process.env.NOTIFICATION_EMAIL || process.env.ADMIN_EMAIL || site.email;
   if (!isConfigured() || !to) {
     console.info('[email] SMTP not configured — skipping admin notification for', inquiry.email);
     return { skipped: true };
