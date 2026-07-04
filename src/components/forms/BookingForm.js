@@ -152,7 +152,7 @@ export default function BookingForm() {
                 <input
                   id="phone"
                   type="tel"
-                  placeholder="+1 (212) 555-0100"
+                  placeholder="+92 300 1234567"
                   aria-invalid={!!errors.phone}
                   className={cn('form-input', errors.phone && 'form-input-invalid')}
                   {...register('phone')}

@@ -98,6 +98,7 @@ export default function ContactForm() {
               <input
                 id="c-phone"
                 type="tel"
+                placeholder="+92 300 1234567"
                 className={cn('form-input', errors.phone && 'form-input-invalid')}
                 {...register('phone')}
               />
