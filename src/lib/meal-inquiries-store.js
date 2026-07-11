@@ -26,14 +26,21 @@ function serialize(doc) {
     _id: String(o._id),
     contactName: o.contactName,
     companyName: o.companyName ?? null,
+    designation: o.designation ?? null,
     phone: o.phone,
+    whatsapp: o.whatsapp ?? null,
     email: o.email,
     officeLocation: o.officeLocation ?? null,
+    address: o.address ?? null,
+    serviceTypes: Array.isArray(o.serviceTypes) ? o.serviceTypes : [],
     mealsCount: o.mealsCount ?? null,
     mealType: o.mealType ?? null,
+    employeesCount: o.employeesCount ?? null,
     requiredDays: o.requiredDays ?? null,
     expectedStartDate: isoOrNull(o.expectedStartDate),
     budgetPerMeal: o.budgetPerMeal ?? null,
+    monthlyBudget: o.monthlyBudget ?? null,
+    dietaryPreferences: o.dietaryPreferences ?? null,
     message: o.message ?? null,
     status: o.status || 'new',
     internalNotes: o.internalNotes ?? null,
@@ -51,6 +58,7 @@ export async function createMealInquiry(data) {
   const now = new Date().toISOString();
   const record = {
     _id: crypto.randomUUID(),
+    serviceTypes: [],
     ...data,
     expectedStartDate: data.expectedStartDate
       ? new Date(data.expectedStartDate).toISOString()

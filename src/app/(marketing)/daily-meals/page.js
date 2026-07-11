@@ -7,6 +7,8 @@ import WeeklyMenuSection from '@/components/daily-meals/WeeklyMenuSection';
 import PackagesSection from '@/components/daily-meals/PackagesSection';
 import HowItWorks from '@/components/daily-meals/HowItWorks';
 import CorporateCTA from '@/components/daily-meals/CorporateCTA';
+import WhyFestigoDaily from '@/components/daily-meals/WhyFestigoDaily';
+import CorporateEnquiryForm from '@/components/daily-meals/CorporateEnquiryForm';
 import DailyFAQ from '@/components/daily-meals/DailyFAQ';
 import FinalCTA from '@/components/daily-meals/FinalCTA';
 import { getActivePublishedMenu } from '@/lib/weekly-menu-store';
@@ -123,6 +125,18 @@ export default async function DailyMealsPage() {
       <PackagesSection packages={packages} />
       <HowItWorks />
       <CorporateCTA />
+      <WhyFestigoDaily />
+
+      <Section id="enquiry" className="scroll-mt-24 bg-cream-100/40">
+        <SectionHeading
+          eyebrow="Corporate enquiry"
+          title="Request a corporate meal plan"
+          description="Tell us about your team and we’ll put together the right office lunch or meal plan. Our corporate meal consultant will be in touch — Karachi only, Monday to Saturday."
+        />
+        <div className="mx-auto mt-12 max-w-3xl">
+          <CorporateEnquiryForm />
+        </div>
+      </Section>
 
       <Section>
         <SectionHeading

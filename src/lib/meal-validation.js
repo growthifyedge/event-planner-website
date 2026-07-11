@@ -5,6 +5,8 @@ import {
   MENU_DAYS,
   WEEKLY_MENU_STATUSES,
   MEAL_INQUIRY_STATUSES,
+  MEAL_SERVICE_TYPES,
+  KARACHI_AREAS,
   MEAL_CURRENCIES,
   DEFAULT_MEAL_CURRENCY,
 } from '@/data/meal-constants';
@@ -208,6 +210,56 @@ export const mealInquiryQuerySchema = z.object({
   page: z.coerce.number().int().min(1).optional(),
   pageSize: z.coerce.number().int().min(1).max(100).optional(),
 });
+
+// ── Corporate enquiry (Phase 3 public form) ──────────────────────────────────
+// Richer, form-shaped schema for the public /daily-meals corporate enquiry.
+// Numbers/dates arrive as strings from the browser, so optionals tolerate ''.
+const optInt = (min, max) =>
+  z.preprocess(
+    (v) => (v === '' || v == null ? undefined : v),
+    z.coerce.number().int().min(min).max(max).optional()
+  );
+const optDate = () =>
+  z.preprocess((v) => (v === '' || v == null ? undefined : v), z.coerce.date().optional());
+
+export const corporateEnquirySchema = z
+  .object({
+    // Company
+    companyName: reqStr(2, 160, 'Please enter your company name.'),
+    contactName: reqStr(2, 120, 'Please enter the contact person’s name.'),
+    designation: optStr(120),
+    // Contact
+    phone: reqStr(7, 40, 'Please enter a valid phone number.'),
+    whatsapp: optStr(40),
+    email: email(),
+    // Location — Karachi ONLY. officeLocation must be a known Karachi area;
+    // anything else (incl. the "outside Karachi" sentinel) fails here.
+    officeLocation: z.enum(KARACHI_AREAS, {
+      errorMap: () => ({ message: 'Please select your area within Karachi.' }),
+    }),
+    address: reqStr(5, 500, 'Please enter your complete office address.'),
+    // Service type — at least one selection.
+    serviceTypes: z
+      .array(z.enum(MEAL_SERVICE_TYPES))
+      .min(1, 'Please select at least one service.')
+      .max(MEAL_SERVICE_TYPES.length),
+    // Order details
+    employeesCount: optInt(1, 1000000),
+    mealsCount: z.coerce
+      .number({ invalid_type_error: 'Please enter the meals required per day.' })
+      .int('Meals per day must be a whole number.')
+      .min(1, 'Meals per day must be at least 1.')
+      .max(1000000),
+    requiredDays: optInt(1, 6),
+    expectedStartDate: optDate(),
+    monthlyBudget: optInt(0, 100000000),
+    // Dietary + notes
+    dietaryPreferences: optStr(1000),
+    message: optStr(4000),
+    // Honeypot — humans never see this; bots that fill it are dropped.
+    website: z.string().max(200).optional(),
+  })
+  .strict();
 
 // ── MealSettings (singleton upsert) ──────────────────────────────────────────
 export const mealSettingsSchema = z

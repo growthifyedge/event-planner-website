@@ -107,6 +107,54 @@ export const corporateAudiences = [
   'Small & medium businesses',
 ];
 
+// "Why companies choose Festigo Daily" — the business section shown above the
+// corporate enquiry form (Phase 3). Premium Pakistani corporate-catering
+// framing, Karachi-only.
+export const whyChooseUs = [
+  {
+    icon: 'UtensilsCrossed',
+    title: 'Reliable Office Lunches',
+    description:
+      'Dependable daily lunches your team can count on — prepared and delivered on schedule to offices across Karachi.',
+  },
+  {
+    icon: 'ChefHat',
+    title: 'Fresh Pakistani Meals',
+    description:
+      'Freshly cooked, desi-style meals your team actually enjoys — familiar Pakistani flavours, professionally prepared.',
+  },
+  {
+    icon: 'Building2',
+    title: 'Corporate Meal Plans',
+    description:
+      'Structured plans for offices, banks, software houses, schools and factories — arranged around your headcount.',
+  },
+  {
+    icon: 'HandPlatter',
+    title: 'Trial / Tasting Meals',
+    description:
+      'Not sure yet? Arrange a trial or tasting for your team and evaluate the quality before committing.',
+  },
+  {
+    icon: 'Soup',
+    title: 'Flexible Catering',
+    description:
+      'Regular office lunches or lighter balanced plans — scale up or down as your team’s needs change.',
+  },
+  {
+    icon: 'CalendarDays',
+    title: 'Monday–Saturday Operations',
+    description:
+      'Consistent service six days a week, Monday to Saturday, so your team is looked after through the work week.',
+  },
+  {
+    icon: 'MapPin',
+    title: 'Karachi-only Service',
+    description:
+      'A dedicated Karachi service — we know the city, its areas and its offices, and we deliver where you work.',
+  },
+];
+
 /**
  * Build the FAQ list from confirmed business info + live MealSettings. Any
  * value that can't be expressed safely falls back to neutral wording — no

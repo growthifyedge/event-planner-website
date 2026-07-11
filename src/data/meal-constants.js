@@ -24,6 +24,42 @@ export const MEAL_INQUIRY_STATUSES = [
   'closed',
 ];
 
+// ── Corporate enquiry service types (Phase 3) ── the selectable services on
+// the public corporate meal enquiry form. Multiple may be chosen.
+export const MEAL_SERVICE_TYPES = [
+  'Office Lunches',
+  'Balanced Meal Plans',
+  'Corporate Meal Program',
+  'Trial / Tasting Meal',
+];
+
+// ── Karachi service areas (Phase 3) ── Festigo Daily serves Karachi ONLY.
+// This controlled list is the structural enforcement of the Karachi-only rule:
+// an enquiry's area must be one of these values.
+export const KARACHI_AREAS = [
+  'DHA',
+  'Clifton',
+  'PECHS',
+  'Gulshan-e-Iqbal',
+  'Gulistan-e-Jauhar',
+  'North Nazimabad',
+  'North Karachi',
+  'Korangi',
+  'Shah Faisal',
+  'Saddar',
+  'SITE',
+  'Malir',
+  'Bahria Town Karachi',
+  'Defence',
+  'FB Area',
+  'Buffer Zone',
+];
+
+// Sentinel the public form uses when a visitor's area is not listed / outside
+// Karachi. It is intentionally NOT a valid area, so it never passes validation
+// — the UI shows a polite "Karachi only" message instead.
+export const OUTSIDE_KARACHI_VALUE = '__outside_karachi__';
+
 // ── Production / menu days ── Festigo Daily operates Monday–Saturday.
 // Sunday is intentionally excluded and must never be accepted as a
 // menu-production day (Sunday is closed).
