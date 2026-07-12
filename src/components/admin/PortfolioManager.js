@@ -272,7 +272,7 @@ export default function PortfolioManager() {
                 </select>
               </div>
               <CldUploadWidget
-                signatureEndpoint="/api/admin/upload-signature"
+                signatureEndpoint="/api/admin/upload-signature?purpose=event-portfolio"
                 options={{
                   folder: 'festigo/portfolio',
                   resourceType: 'auto',
