@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --import ./tests/setup.mjs --test tests/phase4.test.mjs",
+    "test": "node --import ./tests/setup.mjs --test tests/phase4.test.mjs tests/phase4-1.test.mjs",
     "seed": "node scripts/seed.mjs",
     "optimize:images": "node scripts/optimize-images.mjs"
   },

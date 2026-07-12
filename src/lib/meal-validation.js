@@ -351,6 +351,12 @@ export const mealSettingsSchema = z
     regularOrdersEnabled: bool().optional(),
     balancedOrdersEnabled: bool().optional(),
     corporateTrialsEnabled: bool().optional(),
+    // Public visibility (Phase 4.1). Dependent flags are enforced server-side
+    // by normalizeVisibility() below, not here, so a stale/inconsistent client
+    // payload is corrected rather than rejected.
+    publicPageEnabled: bool().optional(),
+    showInNavigation: bool().optional(),
+    showOnHomepage: bool().optional(),
     isPublished: bool().optional(),
   })
   .strict()
@@ -362,3 +368,19 @@ export const mealSettingsSchema = z
       }
     }
   });
+
+/**
+ * Enforce the public-visibility invariant server-side (Phase 4.1):
+ * the navigation and homepage flags are only meaningful while the public page
+ * is enabled. If `publicPageEnabled` is not explicitly true, both dependents
+ * are coerced off — so the persisted settings can never claim "show in nav /
+ * on homepage" while the page itself is disabled (and 404s). Settings saves are
+ * full-object writes, so coercing (rather than rejecting) keeps the UI's
+ * auto-off behaviour and the server rule in agreement.
+ *
+ * Returns a new object; never mutates the input.
+ */
+export function normalizeVisibility(data) {
+  if (data?.publicPageEnabled === true) return { ...data };
+  return { ...data, showInNavigation: false, showOnHomepage: false };
+}

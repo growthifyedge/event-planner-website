@@ -14,10 +14,12 @@ import TestimonialsGrid from '@/components/sections/TestimonialsGrid';
 import PortfolioGallery from '@/components/sections/PortfolioGallery';
 import CTASection from '@/components/sections/CTASection';
 import TrustBar from '@/components/sections/TrustBar';
+import DailyMealsPromo from '@/components/home/DailyMealsPromo';
 import Stars from '@/components/ui/Stars';
 import { socialProof } from '@/data/site';
 import { aboutStory } from '@/data/about';
 import { packagesNote } from '@/data/packages';
+import { getMealSettingsOrDefaults } from '@/lib/meal-settings-store';
 
 // "What we create" category cards resolve to uploaded media at request time.
 export const dynamic = 'force-dynamic';
@@ -32,7 +34,19 @@ const CenterLink = ({ href, children }) => (
   </Reveal>
 );
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Show the Festigo Daily homepage promo only when the owner enabled the
+  // public page AND opted into the homepage placement. Fail closed (hidden)
+  // if settings can't be read. serialize() gates showOnHomepage on
+  // publicPageEnabled, so this single flag is authoritative.
+  let showDailyMealsPromo = false;
+  try {
+    const settings = await getMealSettingsOrDefaults();
+    showDailyMealsPromo = settings?.showOnHomepage === true;
+  } catch {
+    showDailyMealsPromo = false;
+  }
+
   return (
     <>
       <Hero />
@@ -156,6 +170,8 @@ export default function HomePage() {
         </div>
         <CenterLink href="/testimonials">Read more stories</CenterLink>
       </Section>
+
+      {showDailyMealsPromo && <DailyMealsPromo />}
 
       <CTASection />
     </>

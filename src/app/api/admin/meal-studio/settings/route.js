@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { isAdmin } from '@/lib/meal-studio-auth';
 import { getMealSettingsOrDefaults, upsertMealSettings } from '@/lib/meal-settings-store';
-import { mealSettingsSchema } from '@/lib/meal-validation';
+import { mealSettingsSchema, normalizeVisibility } from '@/lib/meal-validation';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -55,7 +55,9 @@ export async function PUT(request) {
   }
 
   try {
-    const settings = await upsertMealSettings(data);
+    // Enforce the public-visibility invariant regardless of what the client
+    // sent: nav/homepage flags cannot persist while the public page is off.
+    const settings = await upsertMealSettings(normalizeVisibility(data));
     return NextResponse.json({ ok: true, settings });
   } catch (err) {
     console.error('[PUT /api/admin/meal-studio/settings]', err);

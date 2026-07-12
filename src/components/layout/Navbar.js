@@ -8,8 +8,21 @@ import Logo from '@/components/ui/Logo';
 import { navLinks, cta, site } from '@/data/site';
 import { cn } from '@/lib/utils';
 
-export default function Navbar() {
+// Public Festigo Daily link — only rendered when admin visibility settings
+// enable it (see MarketingLayout). Defined here so the label/href stay in one
+// place for both the desktop and mobile menus.
+const DAILY_MEALS_LINK = { label: 'Daily Meals', href: '/daily-meals' };
+
+export default function Navbar({ showDailyMeals = false }) {
   const pathname = usePathname();
+
+  // Insert Daily Meals just before the trailing Contact link so the existing
+  // ordering is preserved. When disabled, the centralized navLinks are used
+  // unchanged — no layout or design change.
+  const links = showDailyMeals
+    ? [...navLinks.slice(0, -1), DAILY_MEALS_LINK, navLinks[navLinks.length - 1]]
+    : navLinks;
+
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
@@ -60,7 +73,7 @@ export default function Navbar() {
         <Logo light={!solid} />
 
         <nav className="hidden items-center gap-8 lg:flex">
-          {navLinks.map((l) => {
+          {links.map((l) => {
             const active = isActive(l.href);
             return (
               <Link
@@ -116,7 +129,7 @@ export default function Navbar() {
       >
         <div className="container-luxe pb-8 pt-2">
           <nav className="flex flex-col divide-y divide-ink-200/50">
-            {navLinks.map((l) => (
+            {links.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}

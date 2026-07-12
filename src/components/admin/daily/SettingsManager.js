@@ -40,6 +40,9 @@ export default function SettingsManager() {
         regularOrdersEnabled: s.regularOrdersEnabled !== false,
         balancedOrdersEnabled: s.balancedOrdersEnabled !== false,
         corporateTrialsEnabled: s.corporateTrialsEnabled !== false,
+        publicPageEnabled: s.publicPageEnabled === true,
+        showInNavigation: s.publicPageEnabled === true && s.showInNavigation === true,
+        showOnHomepage: s.publicPageEnabled === true && s.showOnHomepage === true,
         isPublished: s.isPublished === true,
       });
     } catch { setError('Failed to load settings. Please refresh.'); }
@@ -54,6 +57,15 @@ export default function SettingsManager() {
       const next = has ? f.operatingDays.filter((d) => d !== day) : [...MENU_DAYS].filter((d) => f.operatingDays.includes(d) || d === day);
       return { ...f, operatingDays: next };
     });
+  }
+
+  // Disabling the public page auto-switches the dependent visibility toggles off
+  // so the UI can never present an impossible state (nav/homepage on while the
+  // page is off). The server enforces the same rule on save.
+  function setPublicPage(on) {
+    setForm((f) => (on
+      ? { ...f, publicPageEnabled: true }
+      : { ...f, publicPageEnabled: false, showInNavigation: false, showOnHomepage: false }));
   }
 
   async function save() {
@@ -80,6 +92,11 @@ export default function SettingsManager() {
         regularOrdersEnabled: form.regularOrdersEnabled,
         balancedOrdersEnabled: form.balancedOrdersEnabled,
         corporateTrialsEnabled: form.corporateTrialsEnabled,
+        // Public visibility — dependents can only be true while the public
+        // page is enabled (the server enforces this too via normalizeVisibility).
+        publicPageEnabled: form.publicPageEnabled,
+        showInNavigation: form.publicPageEnabled && form.showInNavigation,
+        showOnHomepage: form.publicPageEnabled && form.showOnHomepage,
         isPublished: form.isPublished,
       };
       const res = await fetch('/api/admin/meal-studio/settings', {
@@ -117,6 +134,38 @@ export default function SettingsManager() {
       )}
 
       <div className="mt-6 space-y-6">
+        <Card title="Public Visibility">
+          <p className="text-sm text-ink-500">
+            Control where Festigo Daily appears on the public website. While the
+            public page is off, the <code>/daily-meals</code> page returns 404 and
+            the navigation link and homepage section are hidden — the Meal Studio
+            and all saved meals, packages, menus and enquiries stay fully
+            manageable here.
+          </p>
+          <div className="mt-4 space-y-2">
+            <Toggle
+              label="Enable Festigo Daily public page"
+              description="Makes /daily-meals live. Off by default — turning this off returns 404 and hides the link and homepage section everywhere."
+              checked={form.publicPageEnabled}
+              onChange={setPublicPage}
+            />
+            <Toggle
+              label="Show Daily Meals in website navigation"
+              description="Adds a “Daily Meals” link to the desktop and mobile menus. Requires the public page to be enabled."
+              checked={form.showInNavigation}
+              disabled={!form.publicPageEnabled}
+              onChange={(v) => setForm({ ...form, showInNavigation: v })}
+            />
+            <Toggle
+              label="Show Festigo Daily on homepage"
+              description="Adds a small Festigo Daily section to the homepage. Requires the public page to be enabled."
+              checked={form.showOnHomepage}
+              disabled={!form.publicPageEnabled}
+              onChange={(v) => setForm({ ...form, showOnHomepage: v })}
+            />
+          </div>
+        </Card>
+
         <Card title="Service">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <FieldText label="Service name" value={form.serviceName} onChange={(v) => setForm({ ...form, serviceName: v })} />
@@ -205,11 +254,20 @@ function FieldText({ label, value, onChange, required, placeholder }) {
     </div>
   );
 }
-function Toggle({ label, checked, onChange }) {
+function Toggle({ label, checked, onChange, disabled = false, description }) {
   return (
-    <label className="flex cursor-pointer items-center gap-3">
-      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="h-4 w-4 rounded border-ink-300 text-gold-600 focus:ring-gold-500" />
-      <span className="text-sm text-ink-700">{label}</span>
+    <label className={cn('flex gap-3', disabled ? 'cursor-not-allowed opacity-55' : 'cursor-pointer', description ? 'items-start' : 'items-center')}>
+      <input
+        type="checkbox"
+        checked={checked}
+        disabled={disabled}
+        onChange={(e) => onChange(e.target.checked)}
+        className="mt-0.5 h-4 w-4 rounded border-ink-300 text-gold-600 focus:ring-gold-500 disabled:cursor-not-allowed"
+      />
+      <span>
+        <span className="block text-sm text-ink-700">{label}</span>
+        {description && <span className="mt-0.5 block text-xs text-ink-400">{description}</span>}
+      </span>
     </label>
   );
 }

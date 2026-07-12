@@ -41,6 +41,12 @@ function serialize(doc) {
     regularOrdersEnabled: o.regularOrdersEnabled !== false,
     balancedOrdersEnabled: o.balancedOrdersEnabled !== false,
     corporateTrialsEnabled: o.corporateTrialsEnabled !== false,
+    // Public visibility — default false (hidden) when absent, so existing
+    // records and fresh defaults keep Festigo Daily off the public site until
+    // the owner explicitly enables it.
+    publicPageEnabled: o.publicPageEnabled === true,
+    showInNavigation: o.publicPageEnabled === true && o.showInNavigation === true,
+    showOnHomepage: o.publicPageEnabled === true && o.showOnHomepage === true,
     isPublished: o.isPublished === true,
     createdAt: isoOrNull(o.createdAt),
     updatedAt: isoOrNull(o.updatedAt),

@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import Section from '@/components/ui/Section';
 import SectionHeading from '@/components/ui/SectionHeading';
 import DailyMealsHero from '@/components/daily-meals/DailyMealsHero';
@@ -49,6 +50,8 @@ export const metadata = {
 // Settings fallback used only if the settings read throws (e.g. prod DB down);
 // keeps the page accurate without hiding the logged infrastructure error.
 const FALLBACK_SETTINGS = {
+  // Fail closed: if settings can't be read, treat the page as disabled/hidden.
+  publicPageEnabled: false,
   serviceName: FESTIGO_DAILY_DEFAULTS.serviceName,
   serviceArea: FESTIGO_DAILY_DEFAULTS.serviceArea,
   operatingDays: [...FESTIGO_DAILY_DEFAULTS.operatingDays],
@@ -100,6 +103,13 @@ export default async function DailyMealsPage() {
   ]);
 
   const settings = settingsRaw || FALLBACK_SETTINGS;
+
+  // Public visibility gate (Phase 4.1): the page is a live public service page
+  // only when the owner has explicitly enabled it. Otherwise return a real 404
+  // so it is neither reachable nor indexable as an active service.
+  if (settings.publicPageEnabled !== true) {
+    notFound();
+  }
 
   // Safe public labeling: only present a menu that covers today ("This Week’s
   // Menu") or a future one ("Upcoming Weekly Menu"). A stale/past menu is never

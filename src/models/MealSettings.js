@@ -55,6 +55,16 @@ const MealSettingsSchema = new mongoose.Schema(
     balancedOrdersEnabled: { type: Boolean, default: true },
     corporateTrialsEnabled: { type: Boolean, default: true },
 
+    // ── Public visibility (Phase 4.1) ──────────────────────────────────────
+    // Festigo Daily stays fully hidden from the public site until the owner
+    // explicitly enables it. Defaults are false so existing records (and any
+    // record created before Phase 4.1) read as hidden. The dependent flags are
+    // meaningful only while `publicPageEnabled` is true; the store/route also
+    // enforce that invariant.
+    publicPageEnabled: { type: Boolean, default: false },
+    showInNavigation: { type: Boolean, default: false },
+    showOnHomepage: { type: Boolean, default: false },
+
     isPublished: { type: Boolean, default: false },
   },
   { timestamps: true }
