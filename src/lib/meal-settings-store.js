@@ -90,9 +90,12 @@ export async function upsertMealSettings(updates = {}) {
   const items = await store.read();
   const now = new Date().toISOString();
   const existing = items[0];
+  // On first insert, spread the defaults FIRST so `serialize({})`'s null `_id`
+  // can't clobber the generated id — otherwise the record persists with
+  // `_id:null` and GET keeps reporting `exists:false` after a successful save.
   const next = existing
     ? { ...existing, ...patch, updatedAt: now }
-    : { _id: crypto.randomUUID(), ...serialize({}), ...patch, createdAt: now, updatedAt: now };
+    : { ...serialize({}), _id: crypto.randomUUID(), ...patch, createdAt: now, updatedAt: now };
   await store.write([next]);
   return serialize(next);
 }

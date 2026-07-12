@@ -37,13 +37,61 @@ const nonNegInt = () => z.coerce.number().int().min(0);
 const positiveInt = () => z.coerce.number().int().min(1);
 const bool = () => z.coerce.boolean();
 
+// ── Meal image (Cloudinary) — folder-confined, server-validated ──────────────
+// Meal images must live under this Cloudinary folder and nowhere else, so a
+// saved Meal can never point at (or be used to mutate) Event portfolio media.
+export const MEAL_IMAGE_FOLDER = 'festigo-daily/meals';
+
+const CLOUD_NAME =
+  process.env.CLOUDINARY_CLOUD_NAME || process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || '';
+
+/**
+ * True when `url` is an HTTPS delivery URL on the Cloudinary domain, for the
+ * configured cloud (when known), pointing inside the meals folder.
+ */
+export function isValidMealImageUrl(url) {
+  if (typeof url !== 'string') return false;
+  let u;
+  try {
+    u = new URL(url);
+  } catch {
+    return false;
+  }
+  if (u.protocol !== 'https:') return false;
+  if (u.hostname !== 'res.cloudinary.com') return false;
+  // /<cloud>/<resource_type>/upload/.../festigo-daily/meals/<id>
+  if (CLOUD_NAME && !u.pathname.startsWith(`/${CLOUD_NAME}/`)) return false;
+  if (!/\/(image)\/upload\//.test(u.pathname)) return false;
+  return u.pathname.includes(`/${MEAL_IMAGE_FOLDER}/`);
+}
+
+export function isValidMealPublicId(publicId) {
+  return typeof publicId === 'string' && publicId.startsWith(`${MEAL_IMAGE_FOLDER}/`);
+}
+
 const mealImageSchema = z
   .object({
-    url: optStr(500),
-    publicId: optStr(300),
+    url: z.string().trim().min(1).max(500),
+    publicId: z.string().trim().min(1).max(300),
     alt: optStr(200),
   })
   .strict()
+  .superRefine((img, ctx) => {
+    if (!isValidMealPublicId(img.publicId)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['publicId'],
+        message: `Meal image must be stored under ${MEAL_IMAGE_FOLDER}/.`,
+      });
+    }
+    if (!isValidMealImageUrl(img.url)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['url'],
+        message: 'Meal image URL must be an HTTPS Cloudinary URL in the meals folder.',
+      });
+    }
+  })
   .optional();
 
 // ── Meal ─────────────────────────────────────────────────────────────────────
@@ -262,10 +310,31 @@ export const corporateEnquirySchema = z
   .strict();
 
 // ── MealSettings (singleton upsert) ──────────────────────────────────────────
+// Festigo Daily is Karachi-only. A service area must name Karachi and must not
+// use nationwide/countrywide wording (case/whitespace-insensitive, deterministic
+// — no LLM/classifier).
+const NATIONWIDE_RE =
+  /\b(nation[\s-]?wide|country[\s-]?wide|pakistan[\s-]?wide|all[\s-]?pakistan|across[\s-]?pakistan|anywhere[\s-]?in[\s-]?pakistan|all[\s-]?cities)\b/;
+
+/** Returns an error string for an invalid service area, or null when valid. */
+export function serviceAreaError(raw) {
+  const s = String(raw ?? '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .toLowerCase();
+  if (!s) return 'Service area cannot be empty.';
+  if (NATIONWIDE_RE.test(s)) {
+    return 'Festigo Daily is Karachi-only — nationwide/countrywide service areas are not allowed.';
+  }
+  if (!/karachi/.test(s)) return 'Service area must be within Karachi.';
+  return null;
+}
+
 export const mealSettingsSchema = z
   .object({
     serviceName: optStr(160),
-    serviceArea: optStr(160),
+    // Not optStr() — a blank string must be rejected, not silently dropped.
+    serviceArea: z.string().trim().max(160).optional(),
     karachiOnly: bool().optional(),
     operatingDays: z.array(z.enum(MENU_DAYS)).max(6).optional(),
     sundayClosed: bool().optional(),
@@ -274,7 +343,9 @@ export const mealSettingsSchema = z
       .strict()
       .optional(),
     deliveryWindows: stringArray(20, 120),
-    maximumDailyCapacity: nonNegInt().max(1000000).optional(),
+    // Daily capacity must be a positive integer (> 0). Zero, negative,
+    // fractional, string and NaN-like values are all rejected.
+    maximumDailyCapacity: positiveInt().max(1000000).optional(),
     sfaLicensed: bool().optional(),
     orderingCutoff: optStr(40),
     regularOrdersEnabled: bool().optional(),
@@ -282,4 +353,12 @@ export const mealSettingsSchema = z
     corporateTrialsEnabled: bool().optional(),
     isPublished: bool().optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((v, ctx) => {
+    if (v.serviceArea !== undefined) {
+      const err = serviceAreaError(v.serviceArea);
+      if (err) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['serviceArea'], message: err });
+      }
+    }
+  });

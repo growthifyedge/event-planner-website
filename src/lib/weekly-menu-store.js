@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import WeeklyMenu from '@/models/WeeklyMenu';
 import Meal from '@/models/Meal';
 import {
@@ -46,7 +47,7 @@ function buildSnapshot(meal) {
 }
 
 // Fetch every referenced Meal once, keyed by id string, for the active backend.
-async function fetchMealsMap(ids, be) {
+async function fetchMealsMap(ids, be, session = null) {
   const unique = [...new Set(ids.filter(Boolean).map(String))];
   const map = new Map();
   if (unique.length === 0) return map;
@@ -54,7 +55,9 @@ async function fetchMealsMap(ids, be) {
   if (be === 'mongo') {
     const valid = unique.filter(isObjectId);
     if (valid.length === 0) return map;
-    const docs = await Meal.find({ _id: { $in: valid } }).lean();
+    const docs = await Meal.find({ _id: { $in: valid } })
+      .session(session)
+      .lean();
     for (const d of docs) map.set(String(d._id), d);
     return map;
   }
@@ -258,43 +261,99 @@ export async function updateWeeklyMenu(id, updates) {
   return serialize(items[idx]);
 }
 
+// A MongoDB deployment supports multi-document transactions only on a replica
+// set / mongos. Detect the "not supported" failure so we can fall back safely.
+function isTxnUnsupported(err) {
+  const msg = String(err?.message || '');
+  return (
+    err?.code === 20 ||
+    err?.codeName === 'IllegalOperation' ||
+    /Transaction numbers are only allowed|replica set|mongos|transactions are not supported/i.test(
+      msg
+    )
+  );
+}
+
+// Do the publish + overlap-archive for the mongo backend. When a `session` is
+// supplied both writes run inside a transaction and commit atomically; without
+// one we publish the TARGET first, then archive overlaps, so an interruption
+// can never leave the site with no published menu (worst case: a transient
+// duplicate the public reader already tolerates).
+async function mongoPublish(id, be, session) {
+  const opts = session ? { session } : {};
+  const menu = await WeeklyMenu.findById(id).session(session ?? null).lean();
+  if (!menu) return null;
+
+  const mealsMap = await fetchMealsMap(collectMealIds(menu.days), be, session ?? null);
+  const frozenDays = freezeSnapshots(menu.days, mealsMap);
+  const publishedAt = new Date();
+
+  const overlapFilter = {
+    _id: { $ne: id },
+    status: 'published',
+    weekStart: { $lte: menu.weekEnd },
+    weekEnd: { $gte: menu.weekStart },
+  };
+
+  if (session) {
+    // Atomic: order is irrelevant, both commit or neither does.
+    await WeeklyMenu.updateMany(overlapFilter, { $set: { status: 'archived' } }, opts);
+    const doc = await WeeklyMenu.findByIdAndUpdate(
+      id,
+      { $set: { days: frozenDays, status: 'published', publishedAt } },
+      { new: true, runValidators: true, ...opts }
+    );
+    return doc ? serialize(doc) : null;
+  }
+
+  // Non-transactional safe order: publish target first, then archive overlaps.
+  const doc = await WeeklyMenu.findByIdAndUpdate(
+    id,
+    { $set: { days: frozenDays, status: 'published', publishedAt } },
+    { new: true, runValidators: true }
+  );
+  if (!doc) return null;
+  await WeeklyMenu.updateMany(overlapFilter, { $set: { status: 'archived' } });
+  return serialize(doc);
+}
+
 /**
  * Publish a menu: freeze display snapshots from the current Meals, flip status
  * to 'published', stamp publishedAt, and archive any other published menu that
  * overlaps this menu's date range.
+ *
+ * Atomicity:
+ *  - MongoDB: attempted inside a single transaction; if the deployment does not
+ *    support transactions we fall back to the safe order above.
+ *  - JSON fallback: the complete next state is computed in memory and written in
+ *    ONE `store.write()`, so a failure before that write leaves the previous
+ *    published menu and all overlap state completely intact (no partial write).
  */
 export async function publishWeeklyMenu(id) {
   const be = await resolveMealBackend(LABEL);
 
   if (be === 'mongo') {
     if (!isObjectId(id)) return null;
-    const menu = await WeeklyMenu.findById(id).lean();
-    if (!menu) return null;
 
-    const mealsMap = await fetchMealsMap(collectMealIds(menu.days), be);
-    const frozenDays = freezeSnapshots(menu.days, mealsMap);
-    const publishedAt = new Date();
-
-    const doc = await WeeklyMenu.findByIdAndUpdate(
-      id,
-      { $set: { days: frozenDays, status: 'published', publishedAt } },
-      { new: true, runValidators: true }
-    );
-    if (!doc) return null;
-
-    // Archive other published menus overlapping this date range.
-    await WeeklyMenu.updateMany(
-      {
-        _id: { $ne: id },
-        status: 'published',
-        weekStart: { $lte: doc.weekEnd },
-        weekEnd: { $gte: doc.weekStart },
-      },
-      { $set: { status: 'archived' } }
-    );
-    return serialize(doc);
+    let session;
+    try {
+      session = await mongoose.startSession();
+      let result = null;
+      await session.withTransaction(async () => {
+        result = await mongoPublish(id, be, session);
+      });
+      return result;
+    } catch (err) {
+      if (isTxnUnsupported(err)) {
+        return mongoPublish(id, be, null); // safe non-transactional fallback
+      }
+      throw err;
+    } finally {
+      if (session) await session.endSession();
+    }
   }
 
+  // ── JSON fallback: build the COMPLETE next state, then one atomic write ──
   const items = await store.read();
   const idx = items.findIndex((i) => i._id === id);
   if (idx === -1) return null;
@@ -304,28 +363,39 @@ export async function publishWeeklyMenu(id) {
   const frozenDays = freezeSnapshots(menu.days || [], mealsMap);
   const publishedAt = new Date().toISOString();
 
-  items[idx] = {
-    ...menu,
-    days: frozenDays,
-    status: 'published',
-    publishedAt,
-    updatedAt: publishedAt,
-  };
-
-  // Archive other overlapping published menus.
-  for (let i = 0; i < items.length; i += 1) {
-    if (i === idx) continue;
-    const other = items[i];
-    if (
-      other.status === 'published' &&
-      rangesOverlap(menu.weekStart, menu.weekEnd, other.weekStart, other.weekEnd)
-    ) {
-      items[i] = { ...other, status: 'archived', updatedAt: publishedAt };
+  const next = items.map((it, i) => {
+    if (i === idx) {
+      return { ...menu, days: frozenDays, status: 'published', publishedAt, updatedAt: publishedAt };
     }
-  }
+    if (
+      it.status === 'published' &&
+      rangesOverlap(menu.weekStart, menu.weekEnd, it.weekStart, it.weekEnd)
+    ) {
+      return { ...it, status: 'archived', updatedAt: publishedAt };
+    }
+    return it;
+  });
 
-  await store.write(items);
-  return serialize(items[idx]);
+  await store.write(next); // single write — never a partial state
+  return serialize(next[idx]);
+}
+
+/**
+ * Is `mealId` referenced by any non-archived (draft or published) weekly menu?
+ * Published menus render from frozen snapshots, but a live draft/published slot
+ * still points at the meal by id, so deleting it would orphan that reference.
+ * Centralised here so the delete route and its tests share one definition.
+ */
+export async function isMealReferencedByActiveMenu(mealId) {
+  const target = String(mealId);
+  const { items } = await queryWeeklyMenus({ pageSize: 100 });
+  return items.some(
+    (m) =>
+      m.status !== 'archived' &&
+      (m.days || []).some((d) =>
+        SLOT_KEYS.some((k) => d?.[k]?.mealId && String(d[k].mealId) === target)
+      )
+  );
 }
 
 export async function archiveWeeklyMenu(id) {

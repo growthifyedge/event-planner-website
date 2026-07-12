@@ -12,7 +12,9 @@ import { connectDB } from './db';
  * intentionally left untouched.
  */
 
-const DATA_DIR = path.join(process.cwd(), '.data');
+// Resolved lazily so tests can point the dev file store at an isolated temp
+// directory via FESTIGO_DATA_DIR (defaults to `<cwd>/.data`).
+const dataDir = () => process.env.FESTIGO_DATA_DIR || path.join(process.cwd(), '.data');
 const isProd = () => process.env.NODE_ENV === 'production';
 
 /**
@@ -45,19 +47,20 @@ export async function resolveMealBackend(label) {
  * Reads tolerate a missing/corrupt file by returning []. Used for dev only.
  */
 export function fileStore(fileName) {
-  const FILE = path.join(DATA_DIR, fileName);
+  const filePath = () => path.join(dataDir(), fileName);
   return {
     async read() {
       try {
-        const parsed = JSON.parse(await fs.readFile(FILE, 'utf8'));
+        const parsed = JSON.parse(await fs.readFile(filePath(), 'utf8'));
         return Array.isArray(parsed) ? parsed : [];
       } catch {
         return [];
       }
     },
     async write(items) {
-      await fs.mkdir(DATA_DIR, { recursive: true });
-      await fs.writeFile(FILE, JSON.stringify(items, null, 2), 'utf8');
+      const dir = dataDir();
+      await fs.mkdir(dir, { recursive: true });
+      await fs.writeFile(path.join(dir, fileName), JSON.stringify(items, null, 2), 'utf8');
     },
   };
 }
